@@ -110,7 +110,3 @@ We welcome ideas and suggestions!
 
 ```
 
----
-
-Would you like me to also **add hackathon-style screenshots/preview section** in the README (like mock UI images with captions) so it looks more polished when someone opens your repo?
-```
