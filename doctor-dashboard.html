@@ -403,7 +403,7 @@
         <div class="ai-panel">
           <h3>AI Patient Assistant</h3>
           <div class="ai-chat-log" id="ai-log" role="log" aria-live="polite" aria-relevant="additions">
-            <div class="ai-msg bot">Hi! Ask me about a patient. Try: “Show details for John Doe” or “What’s Jane Smith’s status?”</div>
+            <div class="ai-msg bot">Hi! Ask me about a patient. Try: “Show details for Rishitha” or “What’s Rishitha’s status?”</div>
           </div>
           <div class="ai-input">
             <input id="ai-input" type="text" placeholder="Ask about a patient by name…" autocomplete="off" />
@@ -426,7 +426,7 @@
           <div class="appointment-status status-confirmed">Confirmed</div>
         </div>
         <div class="appointment-body">
-          <div class="appointment-patient">John Doe</div>
+          <div class="appointment-patient">Rishitha</div>
           <div class="appointment-details">Knee Pain Consultation</div>
         </div>
         <div class="appointment-details">Room 5B</div>
@@ -438,7 +438,7 @@
           <div class="appointment-status status-pending">Pending</div>
         </div>
         <div class="appointment-body">
-          <div class="appointment-patient">Jane Smith</div>
+          <div class="appointment-patient">Jahanavi</div>
           <div class="appointment-details">Follow-up Check</div>
         </div>
         <div class="appointment-details">Room 3A</div>
@@ -450,7 +450,7 @@
           <div class="appointment-status status-cancelled">Cancelled</div>
         </div>
         <div class="appointment-body">
-          <div class="appointment-patient">Mark Taylor</div>
+          <div class="appointment-patient">Manikanta</div>
           <div class="appointment-details">Post-surgery Review</div>
         </div>
         <div class="appointment-details">Room 4C</div>
@@ -462,7 +462,7 @@
           <div class="appointment-status status-confirmed">Confirmed</div>
         </div>
         <div class="appointment-body">
-          <div class="appointment-patient">Emily Johnson</div>
+          <div class="appointment-patient">Ishana</div>
           <div class="appointment-details">Physical Therapy</div>
         </div>
         <div class="appointment-details">Room 2D</div>
@@ -484,28 +484,28 @@
           </thead>
           <tbody>
             <tr>
-              <td>John Doe</td>
+              <td>Rishitha</td>
               <td>29</td>
               <td>2024-08-12</td>
               <td><span class="status discharged">Discharged</span></td>
               <td>5B</td>
             </tr>
             <tr>
-              <td>Jane Smith</td>
+              <td>Jahnavi</td>
               <td>35</td>
               <td>2024-08-20</td>
               <td><span class="status pending">Pending</span></td>
               <td>3A</td>
             </tr>
             <tr>
-              <td>Mark Taylor</td>
+              <td>Manikanta</td>
               <td>40</td>
               <td>2024-08-15</td>
               <td><span class="status icu">ICU</span></td>
               <td>ICU-1</td>
             </tr>
             <tr>
-              <td>Emily Johnson</td>
+              <td>Ishana</td>
               <td>27</td>
               <td>2024-08-22</td>
               <td><span class="status life">Critical</span></td>
@@ -537,15 +537,15 @@
         <h4>Scheduled Appointments</h4>
         <div class="schedule-item">
           <div class="schedule-time">10:00 AM</div>
-          <div>Knee Pain Consultation - John Doe</div>
+          <div>Knee Pain Consultation - Rishitha</div>
         </div>
         <div class="schedule-item">
           <div class="schedule-time">11:30 AM</div>
-          <div>Follow-up Check - Jane Smith</div>
+          <div>Follow-up Check - Jahnavi</div>
         </div>
         <div class="schedule-item">
           <div class="schedule-time">3:30 PM</div>
-          <div>Physical Therapy - Emily Johnson</div>
+          <div>Physical Therapy - Ishana</div>
         </div>
       </div>
     </section>
@@ -554,10 +554,10 @@
     <section id="reports" class="page" style="display:none;">
       <h3>Reports</h3>
       <ul class="report-list">
-        <li>Blood Test - John Doe - 2024-08-10</li>
-        <li>X-Ray - Jane Smith - 2024-08-19</li>
-        <li>MRI Scan - Mark Taylor - 2024-08-15</li>
-        <li>Physical Therapy Report - Emily Johnson - 2024-08-22</li>
+        <li>Blood Test - Rishitha - 2024-08-10</li>
+        <li>X-Ray - Jahnavi - 2024-08-19</li>
+        <li>MRI Scan - Manikanta - 2024-08-15</li>
+        <li>Physical Therapy Report - Ishana - 2024-08-22</li>
       </ul>
     </section>
 
@@ -566,7 +566,7 @@
       <div id="messages-header">Messages</div>
       <div id="chat" role="log" aria-live="polite" aria-relevant="additions">
         <div class="message patient" tabindex="0">Hi Doctor, I have a question about my knee.</div>
-        <div class="message doctor" tabindex="0">Hello John, sure! What seems to be the problem?</div>
+        <div class="message doctor" tabindex="0">Hello Priya, sure! What seems to be the problem?</div>
         <div class="message patient" tabindex="0">It’s been hurting after my last session.</div>
       </div>
       <form id="message-form" aria-label="Send message">
@@ -581,10 +581,10 @@
     <section id="medications" class="page" style="display:none;">
       <h3>Medications</h3>
       <ul class="med-list">
-        <li>Paracetamol 500mg - John Doe - Twice daily</li>
-        <li>Ibuprofen 200mg - Jane Smith - After meals</li>
-        <li>Amoxicillin 250mg - Mark Taylor - Thrice daily</li>
-        <li>Vitamin D Supplement - Emily Johnson - Once daily</li>
+        <li>Paracetamol 500mg - Rishitha - Twice daily</li>
+        <li>Ibuprofen 200mg - Jahnavi - After meals</li>
+        <li>Amoxicillin 250mg - Manikanta - Thrice daily</li>
+        <li>Vitamin D Supplement - Ishana - Once daily</li>
       </ul>
     </section>
 
@@ -603,28 +603,28 @@
   <script>
     // ========= Mock Data (drives KPIs, charts, AI chat) =========
     const patientsData = [
-      { name: 'John Doe',   age: 29, gender: 'M', lastVisit: '2024-08-12', status: 'Discharged', room: '5B',   condition: 'Knee Pain', allergies: 'None' },
-      { name: 'Jane Smith', age: 35, gender: 'F', lastVisit: '2024-08-20', status: 'Pending',    room: '3A',   condition: 'Follow-up', allergies: 'Penicillin' },
-      { name: 'Mark Taylor',age: 40, gender: 'M', lastVisit: '2024-08-15', status: 'ICU',        room: 'ICU-1',condition: 'Post-surgery', allergies: 'None' },
-      { name: 'Emily Johnson',age: 27,gender:'F', lastVisit: '2024-08-22', status: 'Critical',   room: '2D',   condition: 'Physiotherapy', allergies: 'Sulfa' },
+      { name: 'Rishitha',   age: 29, gender: 'M', lastVisit: '2024-08-12', status: 'Discharged', room: '5B',   condition: 'Knee Pain', allergies: 'None' },
+      { name: 'Jahnavi', age: 35, gender: 'F', lastVisit: '2024-08-20', status: 'Pending',    room: '3A',   condition: 'Follow-up', allergies: 'Penicillin' },
+      { name: 'Manikanta',age: 40, gender: 'M', lastVisit: '2024-08-15', status: 'ICU',        room: 'ICU-1',condition: 'Post-surgery', allergies: 'None' },
+      { name: 'Lohith',age: 27,gender:'F', lastVisit: '2024-08-22', status: 'Critical',   room: '2D',   condition: 'Physiotherapy', allergies: 'Sulfa' },
       // a few more for better stats
-      { name: 'Aarav Shah', age: 51, gender: 'M', lastVisit: '2024-07-11', status: 'Pending', room: '4A', condition: 'Back Pain', allergies: 'None' },
-      { name: 'Priya Nair', age: 63, gender: 'F', lastVisit: '2024-06-28', status: 'Discharged', room: '6C', condition: 'Arthritis', allergies: 'None' },
-      { name: 'Rohan Gupta', age: 18, gender: 'M', lastVisit: '2024-08-05', status: 'Discharged', room: '2A', condition: 'Sports Injury', allergies: 'None' },
-      { name: 'Sara Ahmed', age: 44, gender: 'F', lastVisit: '2024-08-01', status: 'Pending', room: '3B', condition: 'Sprain', allergies: 'Latex' },
+      { name: 'Akshay Deep', age: 51, gender: 'M', lastVisit: '2024-07-11', status: 'Pending', room: '4A', condition: 'Back Pain', allergies: 'None' },
+      { name: 'Priya Reddy', age: 63, gender: 'F', lastVisit: '2024-06-28', status: 'Discharged', room: '6C', condition: 'Arthritis', allergies: 'None' },
+      { name: 'Rohan', age: 18, gender: 'M', lastVisit: '2024-08-05', status: 'Discharged', room: '2A', condition: 'Sports Injury', allergies: 'None' },
+      { name: 'Ishana', age: 44, gender: 'F', lastVisit: '2024-08-01', status: 'Pending', room: '3B', condition: 'Sprain', allergies: 'Latex' },
     ];
 
     // Read from existing Appointments section for consistency, but also keep a data copy.
     const appointmentsData = [
-      { time: '10:00 AM', status: 'Confirmed', patient: 'John Doe',   desc: 'Knee Pain Consultation', date: '2024-08-23' },
-      { time: '11:30 AM', status: 'Pending',   patient: 'Jane Smith', desc: 'Follow-up Check',        date: '2024-08-23' },
-      { time: '1:00 PM',  status: 'Cancelled', patient: 'Mark Taylor',desc: 'Post-surgery Review',    date: '2024-08-23' },
-      { time: '3:30 PM',  status: 'Confirmed', patient: 'Emily Johnson',desc:'Physical Therapy',      date: '2024-08-23' },
+      { time: '10:00 AM', status: 'Confirmed', patient: 'Rishitha',   desc: 'Knee Pain Consultation', date: '2024-08-23' },
+      { time: '11:30 AM', status: 'Pending',   patient: 'Jahnavi', desc: 'Follow-up Check',        date: '2024-08-23' },
+      { time: '1:00 PM',  status: 'Cancelled', patient: 'Manikanta',desc: 'Post-surgery Review',    date: '2024-08-23' },
+      { time: '3:30 PM',  status: 'Confirmed', patient: 'Lohith',desc:'Physical Therapy',      date: '2024-08-23' },
       // extra historical appointments (for totals)
-      { time: '9:00 AM',  status: 'Confirmed', patient: 'Aarav Shah', date: '2024-07-11', desc: 'Back Pain Consult' },
-      { time: '2:00 PM',  status: 'Confirmed', patient: 'Priya Nair', date: '2024-06-28', desc: 'Arthritis Review' },
-      { time: '12:30 PM', status: 'Confirmed', patient: 'Rohan Gupta',date: '2024-08-05', desc: 'Injury Rehab' },
-      { time: '4:10 PM',  status: 'Pending',   patient: 'Sara Ahmed', date: '2024-08-01', desc: 'Sprain Check' },
+      { time: '9:00 AM',  status: 'Confirmed', patient: 'Akshay Deep', date: '2024-07-11', desc: 'Back Pain Consult' },
+      { time: '2:00 PM',  status: 'Confirmed', patient: 'Priya Reddy', date: '2024-06-28', desc: 'Arthritis Review' },
+      { time: '12:30 PM', status: 'Confirmed', patient: 'Rohan',date: '2024-08-05', desc: 'Injury Rehab' },
+      { time: '4:10 PM',  status: 'Pending',   patient: 'Ishana', date: '2024-08-01', desc: 'Sprain Check' },
     ];
 
     // ========= Navigation handling (unchanged) =========
@@ -675,9 +675,9 @@
       if (!scheduleList) return;
       [...scheduleList.querySelectorAll('.schedule-item')].forEach(item => item.remove());
       const scheduleData = {
-        10: [ { time: '10:00 AM', desc: 'Knee Pain Consultation - John Doe' }, { time: '11:30 AM', desc: 'Follow-up Check - Jane Smith' }, ],
-        15: [ { time: '12:00 PM', desc: 'MRI Scan Review - Mark Taylor' }, ],
-        22: [ { time: '9:00 AM', desc: 'Physical Therapy - Emily Johnson' }, { time: '2:30 PM', desc: 'New Patient Consultation' }, ],
+        10: [ { time: '10:00 AM', desc: 'Knee Pain Consultation - Rishitha' }, { time: '11:30 AM', desc: 'Follow-up Check - Jahnavi' }, ],
+        15: [ { time: '12:00 PM', desc: 'MRI Scan Review - Manikanta' }, ],
+        22: [ { time: '9:00 AM', desc: 'Physical Therapy - Ishana' }, { time: '2:30 PM', desc: 'New Patient Consultation' }, ],
       };
       const daySchedule = scheduleData[day] || [ { time: 'No appointments', desc: '' } ];
       daySchedule.forEach(({ time, desc }) => {
