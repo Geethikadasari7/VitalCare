@@ -1,0 +1,1138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VitalCare — Proactive Digital Health Ecosystem</title>
+  <meta name="description" content="VitalCare connects wearables, home hubs and clinician workflows using AI to create personalized baselines and timely, actionable alerts — so you treat early, not late.">
+  <!-- Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- Theme tokens ---------- */
+    :root{
+      --bg-grad-a:#0836d6;
+      --bg-grad-b:#1b8bff;
+      --accent:#0b5cff;
+      --success:#10b981;
+      --danger:#ef4444;
+      --soft-panel:#eef2ff;
+      --soft-2:#efecfb;
+      --card:#ffffff;
+      --muted:#64748b;
+      --radius:14px;
+      --max-width:1200px;
+      --shadow-lg: 0 24px 60px rgba(6,20,70,0.12);
+      --shadow-sm: 0 8px 20px rgba(6,20,70,0.06);
+      --focus: 3px solid rgba(11,92,255,0.12);
+    }
+
+    /* ---------- Reset / base ---------- */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#0b1724;
+      background: linear-gradient(180deg,var(--bg-grad-a) 0%, var(--bg-grad-b) 55%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      -webkit-text-size-adjust:100%;
+    }
+
+    /* ---------- Layout ---------- */
+    .container{width:100%;max-width:var(--max-width);margin:0 auto;padding:28px;}
+
+    /* ---------- Top nav ---------- */
+    header.site-header{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;color:white;
+      position:sticky;top:0;z-index:60;padding:10px 28px;background:linear-gradient(180deg, rgba(3,10,40,0.06), transparent);
+      backdrop-filter: blur(4px);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand .logo{
+      width:46px;height:46px;border-radius:10px;background:#072a8b;display:flex;align-items:center;justify-content:center;font-weight:800;
+      box-shadow:0 8px 28px rgba(2,10,40,0.32);font-size:18px;color:white;
+    }
+    .brand .meta{font-size:13px;opacity:0.95}
+    nav.desktop{display:flex;gap:18px;align-items:center;font-weight:600}
+    nav.desktop a{color:rgba(255,255,255,0.95);text-decoration:none}
+    nav.desktop a:focus, nav.desktop a:hover{outline:none;text-decoration:underline}
+    .cta-sm button{background:white;color:var(--accent);padding:10px 14px;border-radius:999px;border:0;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(3,10,40,0.14)}
+
+    .mobile-toggle{display:none;background:transparent;border:0;color:white;font-size:22px;cursor:pointer}
+
+    /* ---------- HERO ---------- */
+    .hero{
+      display:grid;grid-template-columns:1fr 640px;gap:28px;align-items:center;padding:48px 0 28px;
+    }
+    .eyebrow{color:rgba(255,255,255,0.95);font-weight:700;letter-spacing:0.06em;margin-bottom:14px}
+    .hero h1{font-size:54px;margin:0;color:white;font-weight:800;line-height:1.02;text-shadow:0 10px 30px rgba(2,12,50,0.15)}
+    .hero p{color:rgba(255,255,255,0.95);font-size:18px;max-width:60ch;margin-top:16px}
+    .hero .actions{display:flex;gap:12px;margin-top:24px}
+    .btn-primary{background:white;color:var(--accent);padding:14px 20px;border-radius:12px;border:0;font-weight:800;cursor:pointer;box-shadow:var(--shadow-lg)}
+    .btn-outline{background:transparent;color:rgba(255,255,255,0.95);padding:12px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.16);font-weight:700;cursor:pointer}
+
+    /* Mockup stack */
+    .mock-stack{position:relative;height:420px;display:flex;align-items:center;justify-content:center}
+    .mock-card{position:absolute;background:var(--card);border-radius:12px;box-shadow:var(--shadow-lg);border:1px solid rgba(5,23,70,0.04);overflow:hidden}
+    .mock-card.small{width:58%;height:72%;transform:rotate(-7deg) translate(-12%,8%);left:-6%;top:8%;z-index:1}
+    .mock-card.mid{width:78%;height:86%;transform:rotate(-3deg) translate(6%,18%);left:-2%;top:4%;z-index:2}
+    .mock-card.big{width:100%;height:92%;transform:rotate(2deg) translate(30%,-18%);left:4%;top:0;z-index:3}
+
+    .mock-header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(90deg,#fff,#f8fbff);border-bottom:1px solid #eef4ff}
+    .logo-small{width:36px;height:36px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    .mock-body{padding:14px;color:#243040}
+
+    .metric-tiles{display:flex;gap:12px}
+    .tile{flex:1;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfdff);border:1px solid #eef6ff;box-shadow:var(--shadow-sm)}
+    .stat-big{font-size:28px;font-weight:800;color:var(--accent)}
+
+    /* ---------- Main content (white sheet) ---------- */
+    main.sheet{
+      background:white;border-radius:18px;margin:-28px auto 40px;max-width:calc(var(--max-width) + 56px);padding:28px;box-shadow:0 40px 90px rgba(6,20,70,0.12);
+      color:var(--muted);
+    }
+
+    section{padding:36px 18px;border-bottom:1px solid #f3f6fb}
+
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    h2.section-title{font-size:28px;color:#07102a;margin:0}
+    p.lead{color:#374151;margin:0 0 12px 0;line-height:1.75}
+
+    /* ---------- INTRO (new section) ---------- */
+    .intro-grid{display:grid;grid-template-columns:1fr 520px;gap:36px;align-items:center}
+    .eyebrow-accent{font-size:13px;color:var(--accent);font-weight:700;letter-spacing:0.06em;margin-bottom:12px}
+    .intro-left h3{font-size:34px;margin:0 0 12px;color:#0b1626}
+    .intro-left p{font-size:17px;color:#334155}
+    .what-i-did h4{font-size:22px;margin-top:18px;color:#0b1626}
+    .chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .chip{background:white;border:1px solid #eef4ff;padding:10px 14px;border-radius:12px;font-weight:700;color:#334155;box-shadow:var(--shadow-sm)}
+
+    /* Right diamond visual */
+    .intro-visual{position:relative;height:420px;display:flex;align-items:center;justify-content:center}
+    .diamond{position:absolute;right:12px;top:12px;width:420px;height:420px;background:var(--soft-2);border-radius:22px;transform:rotate(45deg);box-shadow:0 20px 40px rgba(6,20,70,0.06)}
+    .info-card{position:absolute;background:var(--card);border-radius:12px;padding:14px;box-shadow:var(--shadow-sm);border:1px solid #f1f5ff}
+    .card-top{right:36px;top:36px;width:240px}
+    .card-middle{right:64px;top:120px;width:380px}
+    .rows-card{right:64px;top:240px;width:380px;padding:10px;background:transparent;box-shadow:none;border:none}
+    .card-bottom{right:24px;bottom:24px;width:220px}
+
+    .inf-title{font-size:12px;color:#111827;font-weight:700;margin-bottom:8px}
+    .inf-count{font-size:26px;color:var(--accent);font-weight:800}
+
+    .donut-svg{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+
+    .patient-row{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:white;border:1px solid #f1f5ff;margin-bottom:10px;box-shadow:var(--shadow-sm)}
+    .pill{padding:6px 10px;border-radius:999px;font-weight:700;font-size:12px}
+    .pill.blue{background:#eef7ff;color:var(--accent);border:1px solid #e6f0ff}
+    .pill.red{background:#fff2f2;color:var(--danger);border:1px solid #ffeaec}
+
+    /* ---------- Problem ---------- */
+    .problem-grid{display:grid;grid-template-columns:1fr 320px;gap:28px;align-items:center}
+    .big-stat{font-size:40px;font-weight:800;color:var(--accent)}
+
+    /* ---------- Why Now ---------- */
+    .cards-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .why-card{background:linear-gradient(180deg,#fbfdff,#fff);padding:18px;border-radius:12px;border:1px solid #eef6ff;box-shadow:var(--shadow-sm)}
+
+    /* ---------- Workflow ---------- */
+    .steps{display:flex;gap:14px;flex-wrap:wrap;align-items:stretch}
+    .step{flex:1 1 180px;background:white;padding:16px;border-radius:12px;border:1px solid #eef4ff;box-shadow:var(--shadow-sm)}
+    .step h4{margin:0 0 8px;color:var(--accent)}
+
+    /* ---------- Features ---------- */
+    .features-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .feature{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:12px;border:1px solid #eef4ff;background:white;box-shadow:var(--shadow-sm)}
+
+    /* ---------- Tech stack ---------- */
+    .tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .tech-card{background:white;padding:12px;border-radius:10px;border:1px solid #eef4ff;box-shadow:var(--shadow-sm)}
+
+    /* ---------- MVP + CTA strip ---------- */
+    .mvp-grid{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start}
+    .checklist{display:flex;flex-direction:column;gap:10px}
+    .check{display:flex;gap:10px;align-items:flex-start}
+    .check svg{flex:0 0 22px}
+    .cta-strip{background:linear-gradient(90deg,var(--bg-grad-b),var(--bg-grad-a));padding:16px;border-radius:12px;color:white;display:flex;align-items:center;justify-content:space-between;gap:12px}
+
+    /* ---------- Contact ---------- */
+    form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    input,textarea,select{padding:12px;border-radius:10px;border:1px solid #eef4ff;font-size:15px}
+    textarea{grid-column:1/-1;min-height:110px;resize:vertical}
+    .submit{background:var(--accent);color:white;padding:12px;border-radius:10px;border:0;font-weight:800;cursor:pointer}
+
+    /* ---------- Footer ---------- */
+    footer.site-footer{padding:28px;text-align:center;color:#94a3b8;font-size:14px}
+
+    /* ---------- Utilities & responsive ---------- */
+    .muted{color:var(--muted)}
+    @media (max-width:1080px){
+      .hero{grid-template-columns:1fr 1fr}
+      .intro-grid{grid-template-columns:1fr 420px}
+      .mock-card.small{display:none}
+    }
+    @media (max-width:840px){
+      header.site-header{padding:10px 16px}
+      .mobile-toggle{display:block}
+      nav.desktop{display:none}
+      .hero{grid-template-columns:1fr;gap:20px;padding:28px 0}
+      .mock-stack{height:320px}
+      .container{padding:16px}
+      .intro-grid{grid-template-columns:1fr;gap:20px}
+      .intro-visual{order:2;height:auto}
+      .diamond{display:none}
+      .card-top,.card-middle,.rows-card,.card-bottom{position:static;right:auto;top:auto;width:100%;margin-bottom:12px}
+      .cards-row{grid-template-columns:1fr}
+      .features-grid{grid-template-columns:1fr}
+      .tech-grid{grid-template-columns:1fr}
+      form{grid-template-columns:1fr}
+    }
+
+    /* Focus outlines for accessibility */
+    a:focus, button:focus, input:focus, textarea:focus {outline:none;box-shadow:var(--focus)}
+
+    /* Micro interactions */
+    .mock-card:hover{transform:translateY(-6px);transition:transform .28s ease}
+    .info-card:hover{transform:translateY(-6px);transition:transform .24s ease}
+    .step:hover,.feature:hover,.why-card:hover{transform:translateY(-6px);transition:transform .24s ease;box-shadow:0 18px 48px rgba(6,20,70,0.08)}
+
+    /* ---------- Showcase image styling ---------- */
+    .device-art{
+      width:100%;
+      height:120px;
+      border-radius:10px;
+      overflow:hidden;
+      background:linear-gradient(180deg,#f8fbff,#fff);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid #eef6ff;
+    }
+    .device-art img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
+      display:block;
+    }
+    .device-controls{display:flex;gap:8px;margin-top:10px;align-items:center;justify-content:space-between}
+    .small-btn{padding:8px 10px;border-radius:8px;border:1px solid #eef4ff;background:white;cursor:pointer;font-weight:700}
+    .url-btn{padding:8px 10px;border-radius:8px;border:none;background:transparent;color:var(--accent);cursor:pointer;font-weight:700}
+    .visually-hidden{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+
+    .carousel-wrapper {
+  overflow: hidden;
+  position: relative;
+  margin: auto;
+  max-width: 100%;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  gap: 16px;
+}
+
+.carousel-slide {
+  flex: 0 0 250px; /* Show multiple slides */
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.device-art img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: contain; /* keeps image proportion */
+}
+
+@media screen and (max-width: 768px) {
+  .carousel-slide {
+    flex: 0 0 180px; /* smaller slides on mobile */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .carousel-slide {
+    flex: 0 0 140px;
+  }
+}
+
+.wearables-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .device-card {
+    background: white;
+    padding: 16px;
+    border-radius: 14px;
+    border: 1px solid #eef6ff;
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+  }
+  .device-art {
+    width: 100%;
+    height: 200px; /* bigger for visibility */
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #eef6ff;
+    margin-bottom: 12px;
+    background: #f8fbff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .device-art img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* ensures image fits without cutting */
+  }
+  .device-card h3 {
+    margin: 8px 0 6px;
+    color: #0b1626;
+  }
+  .device-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    text-align: left;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .device-card ul li {
+    margin-bottom: 6px;
+    padding-left: 18px;
+    position: relative;
+  }
+  .device-card ul li::before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 12px;
+  }
+  @media(max-width: 768px){
+    .wearables-grid {
+      grid-template-columns: 1fr; /* stack in one column on small screens */
+    }
+  }
+
+  
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 32px;
+    align-items: flex-start;
+  }
+
+  /* Info Card */
+  .contact-info {
+    background: var(--soft-panel);
+    padding: 22px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(8,24,64,0.06);
+    box-shadow: var(--shadow-sm);
+  }
+  .contact-info h3 {
+    margin-top: 0;
+    color: var(--accent);
+  }
+  .contact-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .contact-info ul li {
+    margin-bottom: 10px;
+  }
+
+  /* Form */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .form-row {
+    display: flex;
+    gap: 14px;
+  }
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px solid rgba(8,24,64,0.06);
+    font-size: 15px;
+    background: var(--card);
+    box-shadow: var(--shadow-sm);
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+  }
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: none;
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 0 3px rgba(11,92,255,0.12);
+  }
+  .contact-form textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  /* Button */
+  .btn-primary {
+    background: linear-gradient(90deg, var(--bg-grad-a), var(--bg-grad-b));
+    color: white;
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(6,20,70,0.12);
+  }
+
+  /* Text colors */
+  .muted {
+    color: var(--muted);
+  }
+
+  @media (max-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+    .form-row {
+      flex-direction: column;
+    }
+  }
+
+  </style>
+</head>
+<body>
+  <!-- ================== HEADER / NAV ================== -->
+  <header class="site-header" role="banner" aria-label="Top navigation">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding:6px 0">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="brand" style="align-items:center">
+          <div class="logo" aria-hidden="true">V</div>
+          <div>
+            <div class="meta" style="font-weight:700">VitalCare</div>
+            <div class="meta" style="font-size:12px;opacity:0.8">2025</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="desktop" role="navigation" aria-label="Primary" id="primaryNav">
+        <a href="#intro">Home</a>
+        <a href="Store.html" onclick="location.href='Store.html'">Store</a>
+       <a href="#contact">Contact</a>
+
+      </nav>
+
+      <div style="display:flex;gap:12px;align-items:center">
+        <button class="mobile-toggle" aria-controls="primaryNav" aria-expanded="false" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
+        <div class="cta-sm"><button onclick="scrollToSection('#mvp')">Get Demo</button></div>
+        <div class="cta-sm">
+       <button onclick="window.location.href='login.html'">Login / Register</button></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================== HERO ================== -->
+  <div class="container">
+    <section class="hero" aria-label="Hero">
+      <div>
+        <div class="eyebrow">Personalized · Proactive · Accessible</div>
+        <h1 style="margin-bottom:40px;">Reactive care to proactive care.</h1>
+        
+        <p style="margin-bottom:60px;">A Digital Health Ecosystem. Your Personalized HealthSystem</p>
+
+        <div class="actions" aria-hidden="false">
+          <button class="btn-primary" onclick="scrollToSection('#contact')" aria-label="Request demo">Request Demo</button>
+          <button class="btn-outline" onclick="scrollToSection('#features')" aria-label="See features">See Features</button>
+        </div>
+      </div>
+
+      <!-- Mockup stack -->
+      <div class="mock-stack" aria-hidden="true" role="img" aria-label="Product mockups">
+        <!-- small -->
+        <div class="mock-card small" title="Patient list mock">
+          <div class="mock-header">
+            <div class="logo-small">M</div>
+            <div style="font-weight:700;color:#133a86">Vitalcare</div>
+          </div>
+          <div class="mock-body">
+            <!-- Simulated patient list placeholder -->
+            <div style="height:180px;display:flex;flex-direction:column;gap:8px;justify-content:center">
+              <div style="height:12px;background:#f1f5ff;border-radius:6px;width:80%"></div>
+              <div style="height:12px;background:#f1f5ff;border-radius:6px;width:70%"></div>
+              <div style="height:12px;background:#f1f5ff;border-radius:6px;width:60%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- mid -->
+        <div class="mock-card mid" title="Summary cards mock">
+          <div class="mock-header">
+            <div class="logo-small">M</div>
+            <div style="font-weight:700;color:#133a86">Vitalcare</div>
+          </div>
+          <div class="mock-body">
+            <div class="metric-tiles">
+              <div class="tile">
+                <div style="font-size:12px;color:#374151">Offline Consultations</div>
+                <div class="stat-big">101</div>
+                <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+                  <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden><circle cx="6" cy="12" r="6" fill="#10b981"/></svg>
+                  <div style="color:#10b981;font-weight:700;font-size:13px">+3.11%</div>
+                </div>
+              </div>
+              <div class="tile">
+                <div style="font-size:12px;color:#374151">Online Consultations</div>
+                <div class="stat-big" style="color:#ff5c6c">96</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- big -->
+        <div class="mock-card big" title="Dashboard mock">
+          <div class="mock-header">
+            <div class="logo-small">V</div>
+            <div style="font-weight:700;color:#133a86">VitalCare Dashboard</div>
+          </div>
+          <div class="mock-body">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;gap:12px">
+                <div style="flex:1;background:#fff;border-radius:10px;padding:12px;border:1px solid #eef6ff">
+                  <div style="font-size:12px;color:#111827;font-weight:700">Total Patients</div>
+                  <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+                    <div style="font-size:26px;font-weight:800;color:var(--accent)">197</div>
+                    <!-- inline donut SVG placeholder -->
+                    <svg width="64" height="64" viewBox="0 0 42 42" aria-hidden>
+                      <circle cx="21" cy="21" r="15.9" fill="#f3f7ff"></circle>
+                      <circle cx="21" cy="21" r="15.9" fill="none" stroke="#0b5cff" stroke-width="6" stroke-dasharray="36 100" stroke-linecap="round" transform="rotate(-90 21 21)"></circle>
+                      <text x="21" y="24" text-anchor="middle" font-size="8" fill="#0b5cff" font-weight="700">110</text>
+                    </svg>
+                  </div>
+                </div>
+                <div style="flex:1;background:#fff;border-radius:10px;padding:12px;border:1px solid #fff0f3">
+                  <div style="font-size:12px;color:#111827;font-weight:700">Tasks</div>
+                  <div style="margin-top:8px">Task Completed successfully — Sign up for Covid-19 training course for medicians</div>
+                </div>
+              </div>
+              <!-- placeholder sparkline -->
+              <div style="height:56px;background:linear-gradient(90deg,#fff,#fbfdff);border-radius:10px;border:1px solid #eef6ff;display:flex;align-items:center;justify-content:center;color:#cbd5e1">
+                <svg width="220" height="40" viewBox="0 0 220 40" aria-hidden>
+                  <path d="M0 30 L40 26 L80 28 L120 18 L160 22 L200 12 L220 18" fill="none" stroke="#ff7a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================== MAIN SHEET ================== -->
+  <main class="sheet" role="main" aria-labelledby="mainTitle">
+    <div class="container">
+      <h1 id="mainTitle" class="visually-hidden" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">VitalCare Landing Page</h1>
+
+      <!-- ===== INTRODUCTION (NEW SECTION) ===== -->
+      <section id="intro" aria-labelledby="introTitle">
+        <div class="intro-grid">
+          <!-- left -->
+          <div class="intro-left">
+            <div class="eyebrow-accent">INTRODUCTION</div>
+            <h3 id="introTitle">What is Vitalcare ?</h3>
+            <p>Vitalcare is a healthcare management platform for patients, doctors, and hospitals that can be used to schedule and check out appointments and other tasks, as well as view patient files and records, among other things.</p>
+
+            <div class="what-i-did">
+              <h4>Our Goal</h4>
+              <p>Was to create a single multifunctional tool that could help hospitals and health professionals manage patients, appointments, schedules, and other tasks all in one workspace.</p>
+
+              <div class="chips" role="list" aria-label="Key activities">
+                <div class="chip" role="listitem">Research</div>
+                <div class="chip" role="listitem">Design System</div>
+                <div class="chip" role="listitem">Visual design</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- right visual -->
+          <div class="intro-visual" aria-hidden="true">
+            <div class="diamond" aria-hidden="true"></div>
+
+            <div class="info-card card-top" role="group" aria-label="Total patients">
+              <div class="inf-title">Total Patients</div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <div class="inf-count">197</div>
+                <!-- pretty donut (animated via JS when in viewport) -->
+                <svg id="donutIntro" width="84" height="84" viewBox="0 0 42 42" role="img" aria-label="Donut showing female/male split">
+                  <circle cx="21" cy="21" r="15.9" fill="#f8fbff"></circle>
+                  <circle class="donut-seg" cx="21" cy="21" r="15.9" fill="none" stroke="#0b5cff" stroke-width="6" stroke-dasharray="0 100" stroke-linecap="round" transform="rotate(-90 21 21)"></circle>
+                  <circle cx="21" cy="21" r="11" fill="#fff"></circle>
+                  <text x="21" y="24" text-anchor="middle" font-size="7" fill="#0b5cff" font-weight="700">110F</text>
+                </svg>
+              </div>
+            </div>
+
+            <div class="info-card card-middle" role="group" aria-label="Offline consultations">
+              <div class="inf-title">Offline Consultations</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="flex:1">
+                  <div style="font-size:24px;font-weight:800;color:#0b4dd8">101</div>
+                  <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+                    <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden><circle cx="5" cy="5" r="5" fill="#10b981"/></svg>
+                    <div style="font-weight:700;color:#10b981">+3.11%</div>
+                  </div>
+                </div>
+                <div aria-hidden="true" style="width:120px;height:60px;background:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid #eef6ff">
+                  <!-- mini sparkline -->
+                  <svg width="100" height="50" viewBox="0 0 100 50"><path d="M0 40 L20 36 L40 30 L60 34 L80 26 L100 30" fill="none" stroke="#0b5cff" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="rows-card" role="group" aria-label="Patient rows">
+              <div class="rows-panel" style="background:linear-gradient(180deg,#fff,#fbfcff);padding:12px;border-radius:12px;border:1px solid #eef6ff;box-shadow:var(--shadow-sm)">
+                <div class="patient-row">
+                  <div><div style="font-weight:700">Amala Jones</div><small class="muted">Stroke</small></div>
+                  <div><span class="pill blue">Awaiting surgery</span></div>
+                </div>
+                <div class="patient-row">
+                  <div><div style="font-weight:700">Damilola Oyin</div><small class="muted">Liver failure</small></div>
+                  <div><span class="pill red">On treatment</span></div>
+                </div>
+                <div class="patient-row">
+                  <div><div style="font-weight:700">Selim jubril</div><small class="muted">Typhoid</small></div>
+                  <div><span class="pill blue">Awaiting surgery</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-card card-bottom" role="group" aria-label="Online consultations">
+              <div class="inf-title">Online Consultations</div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="font-size:20px;font-weight:800;color:#111827">96</div>
+                <div style="flex:1"></div>
+                <div style="text-align:right">
+                  <div style="font-size:12px;color:#ef4444;font-weight:700">-20.9%</div>
+                  <div aria-hidden="true" style="width:80px;height:36px;background:linear-gradient(90deg,#fff,#fff7f7);border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid #fff0f3">
+                    <!-- mini spark -->
+                    <svg width="60" height="30" viewBox="0 0 60 30"><path d="M0 24 L20 20 L40 22 L60 14" fill="none" stroke="#ff7a7a" stroke-width="2" stroke-linecap="round"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== PROBLEM ===== -->
+      <section id="problem" aria-labelledby="problemTitle">
+        <div class="section-head">
+          <h2 id="problemTitle" class="section-title">The problem: healthcare is reactive</h2>
+        </div>
+
+        <div class="problem-grid">
+          <div>
+            <p class="lead">
+              Quick question — how many of you only visit a doctor after Google has already scared you with 27 possible diseases?
+            </p>
+            <p class="lead" style="margin-top:12px">
+              That’s the problem. Healthcare today is reactive. We wait until things break. Diseases like diabetes or heart issues don’t send a warning email — they sneak in quietly. In fact, WHO says they caused <strong>43 million deaths in 2021</strong> alone.
+            </p>
+
+            <ul style="margin-top:16px;color:var(--muted);line-height:1.8">
+              <li><strong>Fragmented data:</strong> devices don't talk to clinician systems.</li>
+              <li><strong>Late action:</strong> care happens after deterioration.</li>
+              <li><strong>Information overload:</strong> clinicians drown in unusable signals.</li>
+            </ul>
+          </div>
+
+          <aside>
+            <div style="background:linear-gradient(180deg,#fff,#fbfdff);padding:20px;border-radius:12px;border:1px solid #eef6ff;box-shadow:var(--shadow-sm)">
+              <div style="font-size:14px;color:#0b4dd8;font-weight:800">Remote monitoring is ready</div>
+              <div style="font-size:26px;font-weight:800;margin-top:10px;color:var(--accent)">>500M devices</div>
+              <div style="margin-top:8px;color:var(--muted)">Wearable shipments and telehealth adoption mean the infrastructure exists to move from reactive to proactive care.</div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===== WHY NOW ===== -->
+      <section id="why" aria-labelledby="whyTitle">
+        <div class="section-head">
+          <h2 id="whyTitle" class="section-title">Why Now?</h2>
+        </div>
+
+        <div class="cards-row">
+          <div class="why-card">
+            <strong>Market & Timing</strong>
+            <p class="muted" style="margin-top:8px">Remote health monitoring is a multi-billion dollar market and adoption accelerated after COVID.</p>
+          </div>
+          <div class="why-card">
+            <strong>Data + AI</strong>
+            <p class="muted" style="margin-top:8px">We can now build per-person baselines to reduce false alarms and detect meaningful multimodal signals.</p>
+          </div>
+          <div class="why-card">
+            <strong>Accessibility</strong>
+            <p class="muted" style="margin-top:8px">Voice hubs and simple clinician workflows make the system useful for non-tech users and busy providers.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== WORKFLOW ===== -->
+      <section id="workflow" aria-labelledby="workflowTitle">
+        <div class="section-head">
+          <h2 id="workflowTitle" class="section-title">Workflow — how it works</h2>
+        </div>
+
+        <p class="lead">Simple, reliable flow from device → cloud → clinician → patient. We keep clinicians in the loop while automating baseline detection and alerts.</p>
+
+        <div class="steps" style="margin-top:16px">
+          <div class="step" role="article" aria-label="Step 1">
+            <h4>1. Device captures vitals</h4>
+            <p class="muted">Wearables, rings, bedside hubs collect heart rate, SpO₂, activity and sleep.</p>
+          </div>
+
+          <div class="step" role="article" aria-label="Step 2">
+            <h4>2. Local preprocessing & ingestion</h4>
+            <p class="muted">Edge smoothing and secure ingestion (MQTT/HTTPS) into the cloud.</p>
+          </div>
+
+          <div class="step" role="article" aria-label="Step 3">
+            <h4>3. Time-series storage & features</h4>
+            <p class="muted">Store raw signals and derived features in a time-series DB for robust analysis.</p>
+          </div>
+
+          <div class="step" role="article" aria-label="Step 4">
+            <h4>4. AI core — personalized baselines</h4>
+            <p class="muted">Rolling averages + z-scores compare each patient to their own baseline to reduce false alarms.</p>
+          </div>
+
+          <div class="step" role="article" aria-label="Step 5">
+            <h4>5. Clinician-in-the-loop & voice hub</h4>
+            <p class="muted">AI proposes risk cards; clinicians review and patients receive voice or push updates.</p>
+          </div>
+        </div>
+      </section>
+
+      
+<!-- ===== WEARABLES SHOWCASE (prominent) ===== -->
+<section id="wearables" aria-labelledby="wearablesTitle">
+  <div class="section-head">
+    <h2 id="wearablesTitle" class="section-title">Wearables Showcase</h2>
+    <p class="muted">Devices VitalCare integrates with — simple preview of supported devices.</p>
+  </div>
+
+  <div class="wearables-grid">
+    <!-- Watch -->
+    <div class="device-card">
+      <div class="device-art">
+        <img src="images/Smartwatch.jpg" alt="Vital Watch">
+      </div>
+      <h3>Vital Watch</h3>
+      <p class="muted">Wrist wearable — HR, SpO₂, steps, sleep</p>
+      <ul>
+        <li>Heart rate monitoring</li>
+        <li>Sleep tracking</li>
+        <li>Daily activity insights</li>
+      </ul>
+    </div>
+
+    <!-- Ring -->
+    <div class="device-card">
+      <div class="device-art">
+        <img src="images/Smartring.jpg" alt="Pulse Ring">
+      </div>
+      <h3>Pulse Ring</h3>
+      <p class="muted">Ring device — HR, HRV, sleep stages</p>
+      <ul>
+        <li>Continuous HR tracking</li>
+        <li>Stress & HRV analysis</li>
+        <li>Sleep stage detection</li>
+      </ul>
+    </div>
+
+    <!-- Smart Locket -->
+    <div class="device-card">
+      <div class="device-art">
+        <img src="images/Smartbracelet.jpg" alt="Smart Locket">
+      </div>
+      <h3>Smart Bracelet</h3>
+      <p class="muted">Neck wearable — ECG, respiratory tracking</p>
+      <ul>
+        <li>ECG monitoring</li>
+        <li>Breathing rate analysis</li>
+        <li>Lightweight & portable</li>
+      </ul>
+    </div>
+
+    <!-- Home Hub -->
+    <div class="device-card">
+      <div class="device-art">
+        <img src="images/Smarthome.jpg" alt="Home Hub">
+      </div>
+      <h3>Home Hub</h3>
+      <p class="muted">Bedside hub — vitals sync, voice integration</p>
+      <ul>
+        <li>Voice-enabled assistant</li>
+        <li>Centralized data sync</li>
+        <li>Clinician connectivity</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<script>
+  let currentIndex = 0;
+  const slides = document.querySelectorAll(".carousel-slide");
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle("active", i === index);
+      slide.style.display = (i === index) ? "block" : "none";
+    });
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % slides.length;
+    showSlide(currentIndex);
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    showSlide(currentIndex);
+  }
+
+  // Initialize
+  showSlide(currentIndex);
+</script>
+
+
+      <!-- ===== FEATURES ===== -->
+      <section id="features" aria-labelledby="featuresTitle">
+        <div class="section-head">
+          <h2 id="featuresTitle" class="section-title">Key features</h2>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature">
+            <div style="width:44px;height:44px;border-radius:10px;background:#eef7ff;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)">PB</div>
+            <div>
+              <div style="font-weight:800">Personalized Baselines</div>
+              <div class="muted">No false alarms — AI adapts to each patient’s baseline to reduce noise and increase signal quality.</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div style="width:44px;height:44px;border-radius:10px;background:#f6fff4;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--success)">MD</div>
+            <div>
+              <div style="font-weight:800">Multimodal Detection</div>
+              <div class="muted">Combine HR, SpO₂, HRV, sleep and activity for robust, multi-signal detection.</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div style="width:44px;height:44px;border-radius:10px;background:#fff7fb;display:flex;align-items:center;justify-content:center;font-weight:700;color:#ff5c6c">CL</div>
+            <div>
+              <div style="font-weight:800">Clinician-in-the-loop</div>
+              <div class="muted">AI suggests actions, clinicians review and decide — preserving clinical responsibility.</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div style="width:44px;height:44px;border-radius:10px;background:#eef3ff;display:flex;align-items:center;justify-content:center;font-weight:700;color:#6b6bff">VH</div>
+            <div>
+              <div style="font-weight:800">Voice Hub</div>
+              <div class="muted">Speakable summaries for users who prefer voice-based updates rather than apps.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TECH STACK ===== -->
+      <section id="tech" aria-labelledby="techTitle">
+        <div class="section-head">
+          <h2 id="techTitle" class="section-title">Tech stack & approach</h2>
+        </div>
+
+        <p class="muted">Taken from the project notes (shortened): Devices simulated with Python; secure ingestion via MQTT/HTTPS; backend built with FastAPI; time-series storage using InfluxDB and SQLite backup; AI using rolling averages + z-scores and scikit-learn; dashboard prototypes with Streamlit; voice via Web Speech API; security: HTTPS + JWT.</p>
+
+        <div style="margin-top:14px" class="tech-grid" aria-hidden="true">
+          <div class="tech-card"><strong>Device simulator</strong><div class="muted">Simulate vitals streams (Python)</div></div>
+          <div class="tech-card"><strong>Communication</strong><div class="muted">MQTT / HTTPS ingestion</div></div>
+          <div class="tech-card"><strong>Backend</strong><div class="muted">FastAPI / secure endpoints</div></div>
+          <div class="tech-card"><strong>Storage</strong><div class="muted">InfluxDB (time-series) / SQLite</div></div>
+          <div class="tech-card"><strong>AI</strong><div class="muted">Z-scores, rolling averages, scikit-learn</div></div>
+          <div class="tech-card"><strong>Dashboard</strong><div class="muted">Streamlit / React prototypes</div></div>
+        </div>
+      </section>
+
+      <!-- ===== MVP ===== -->
+      <section id="mvp" aria-labelledby="mvpTitle">
+        <div class="section-head">
+          <h2 id="mvpTitle" class="section-title">MVP — what we built</h2>
+        </div>
+
+        <div class="mvp-grid">
+          <div>
+            <div class="checklist">
+              <div class="check"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden><path d="M20 6L9 17l-5-5" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Device simulator</strong><div class="muted">Streaming vitals for testing and QA.</div></div></div>
+
+              <div class="check"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden><path d="M20 6L9 17l-5-5" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>FastAPI receiver</strong><div class="muted">Ingestion endpoints & persistence.</div></div></div>
+
+              <div class="check"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden><path d="M20 6L9 17l-5-5" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>AI baseline logic</strong><div class="muted">Rolling mean + z-score thresholds.</div></div></div>
+
+              <div class="check"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden><path d="M20 6L9 17l-5-5" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Clinician dashboard</strong><div class="muted">Risk cards + approve/reject flow.</div></div></div>
+
+              <div class="check"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden><path d="M20 6L9 17l-5-5" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Clinician-in-the-loop</strong><div class="muted">AI suggests, clinician decides.</div></div></div>
+
+              <div class="check"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden><path d="M20 6L9 17l-5-5" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><div><strong>Voice hub</strong><div class="muted">Voice summaries via Web Speech API.</div></div></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="cta-strip" role="complementary" aria-label="MVP call to action">
+              <div>
+                <div style="font-weight:800">See a live demo</div>
+                <div style="opacity:0.95;margin-top:6px">Experience the flow — watch AI surface a risk card and clinician review.</div>
+              </div>
+              <div>
+                <button class="btn-primary" onclick="scrollToSection('#contact')">Request Demo</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CONTACT ===== -->
+      <section id="contact" aria-labelledby="contactTitle">
+  <div class="section-head">
+    <h2 id="contactTitle" class="section-title">Get in Touch</h2>
+    <p class="muted">We’d love to hear from you! Whether you’re a hospital, clinic, or researcher — let us know how VitalCare can help.</p>
+  </div>
+
+  <div class="contact-grid">
+    <!-- Left Info Panel -->
+    <div class="contact-info">
+      <h3>Contact Information</h3>
+      <p class="muted">Fill out the form and our team will get back to you as soon as possible.</p>
+      <ul>
+        <li><strong>Email:</strong> support@vitalcare.com</li>
+        <li><strong>Phone:</strong> +1 (555) 123-4567</li>
+        <li><strong>Address:</strong> 123 Health St, Wellness City</li>
+      </ul>
+    </div>
+
+    <!-- Right Form Panel -->
+    <form id="contactForm" class="contact-form" onsubmit="handleForm(event)">
+      <div class="form-row">
+        <input type="text" id="name" name="name" placeholder="Full name" required />
+        <input type="email" id="email" name="email" placeholder="Work email" required />
+      </div>
+      <div class="form-row">
+        <input type="text" id="org" name="org" placeholder="Organization / clinic" />
+        <input type="text" id="role" name="role" placeholder="Role (doctor, CIO, researcher)" />
+      </div>
+      <textarea id="message" name="message" placeholder="Your message..."></textarea>
+      <button type="submit" class="btn-primary">Request Demo</button>
+    </form>
+  </div>
+</section>
+
+      <!-- ===== FOOTER ===== -->
+      <footer class="site-footer" role="contentinfo">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;max-width:var(--max-width);margin:0 auto">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:44px;height:44px;border-radius:10px;background:#072a8b;color:white;display:flex;align-items:center;justify-content:center;font-weight:700">V</div>
+            <div style="font-weight:700;color:#0b2a6b">VitalCare</div>
+          </div>
+          <div style="color:#94a3b8">© 2025 VitalCare · <a href="#" style="color:#94a3b8;text-decoration:underline">Privacy</a> · <a href="#" style="color:#94a3b8;text-decoration:underline">Terms</a></div>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <!-- ================== SCRIPTS ================== -->
+  <script>
+    /* ---------- Mobile menu toggle ---------- */
+    function toggleMenu(){
+      const nav = document.querySelector('nav.desktop');
+      const btn = document.querySelector('.mobile-toggle');
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      if(!expanded){
+        nav.style.display = 'flex';
+        nav.style.flexDirection = 'column';
+        nav.style.position = 'absolute';
+        nav.style.right = '18px';
+        nav.style.top = '68px';
+        nav.style.background = 'linear-gradient(180deg, rgba(3,12,40,0.96), rgba(8,18,60,0.9))';
+        nav.style.padding = '12px';
+        nav.style.borderRadius = '10px';
+        btn.setAttribute('aria-expanded','true');
+      } else {
+        nav.style.display = '';
+        nav.style.flexDirection = '';
+        nav.style.position = '';
+        nav.style.right = '';
+        nav.style.top = '';
+        nav.style.background = '';
+        nav.style.padding = '';
+        nav.style.borderRadius = '';
+        btn.setAttribute('aria-expanded','false');
+      }
+    }
+
+    /* ---------- Smooth scroll helper ---------- */
+    function scrollToSection(sel){
+      const el = document.querySelector(sel);
+      if(!el) return window.scrollToSection({top:0,behavior:'smooth'});
+      const top = window.scrollY + el.getBoundingClientRect().top - 18;
+      window.scrollToSection({top,behavior:'smooth'});
+    }
+
+    /* ---------- Form handling (client-side only) ---------- */
+    function handleForm(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      if(!name || !email){
+        alert('Please add your name and work email.');
+        return;
+      }
+      // In production: submit to backend
+      alert('Thanks — demo request submitted. We will contact you at ' + email + ' (this is a simulated action).');
+      document.getElementById('contactForm').reset();
+      scrollToSection('#mvp');
+    }
+
+    /* ---------- Simple on-scroll animation: draw sparklines and donut ---------- */
+    function animateDonut(){
+      const donut = document.querySelector('#donutIntro .donut-seg');
+      if(!donut) return;
+      // animate stroke-dasharray to simulate filling (value ~ 58%)
+      let start = null;
+      const target = 36; // stroke length % (out of 100)
+      const duration = 900;
+      function step(ts){
+        if(!start) start = ts;
+        const progress = Math.min((ts - start)/duration,1);
+        const current = target * progress;
+        donut.setAttribute('stroke-dasharray', current + ' 100');
+        if(progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function animateSparklines(){
+      // find all sparklines and add a stroke-dashoffset animation
+      document.querySelectorAll('svg path').forEach(path => {
+        const length = path.getTotalLength ? path.getTotalLength() : 100;
+        path.style.transition = 'stroke-dashoffset 1200ms ease-out';
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
+        setTimeout(()=>{ path.style.strokeDashoffset = 0 }, 120);
+      });
+    }
+
+    function onScrollCheck(){
+      const el = document.getElementById('donutIntro');
+      if(!el) return;
+      const rect = el.getBoundingClientRect();
+      if(rect.top < window.innerHeight - 60){
+        animateDonut();
+        animateSparklines();
+        window.removeEventListener('scroll', onScrollCheck);
+      }
+    }
+    window.addEventListener('scroll', onScrollCheck);
+    window.addEventListener('load', onScrollCheck);
+
+    /* Accessibility: allow keyboard navigation to scroll links */
+    document.querySelectorAll('nav.desktop a').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const href = a.getAttribute('href');
+        scrollToSection(href);
+      });
+    });
+
+    /* ---------- Image handling for showcase ---------- */
+    function handleFileSelect(e, imgId){
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
+      if(!file.type.startsWith('image/')){
+        alert('Please select an image file (png, jpg, webp).');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        const img = document.getElementById(imgId);
+        if(img){
+          img.src = ev.target.result;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function useImageURL(imgId){
+      const url = prompt('Enter a public image URL (https://...)');
+      if(!url) return;
+      // basic validation
+      if(!/^https?:\/\//i.test(url)){
+        alert('Please enter a valid URL starting with http:// or https://');
+        return;
+      }
+      const img = document.getElementById(imgId);
+      if(img){
+        img.src = url;
+      }
+    }
+
+    /* Optional enhancement: drag & drop onto image area to replace */
+    document.querySelectorAll('.device-art').forEach(art=>{
+      art.addEventListener('dragover', function(ev){ ev.preventDefault(); this.style.outline = '3px dashed rgba(11,92,255,0.12)'; });
+      art.addEventListener('dragleave', function(ev){ ev.preventDefault(); this.style.outline = ''; });
+      art.addEventListener('drop', function(ev){
+        ev.preventDefault();
+        this.style.outline = '';
+        const file = ev.dataTransfer.files && ev.dataTransfer.files[0];
+        if(!file) return;
+        if(!file.type.startsWith('image/')){ alert('Please drop an image file'); return; }
+        const img = this.querySelector('img');
+        const reader = new FileReader();
+        reader.onload = function(ev){ if(img) img.src = ev.target.result; };
+        reader.readAsDataURL(file);
+      });
+    });
+  </script>
+
+  <!--
+    NOTES / TODOs for developers:
+    - Replace placeholder SVGs with real device art (SVG/PNG) by clicking "Replace Image" or using "Use image URL".
+    - To persist images upload to a server in production and store the returned URL in user profile.
+    - Ensure uploaded images are validated & resized on server-side for security.
+  -->
+<script>
+  function scrollToSection(id) {
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitalcare - Digital Health Ecosystem</title>
+  <meta name="description" content="Digital Health Ecosystem Authentication" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+/* CSS Variables */
+:root {
+  --primary: hsl(218, 91%, 42%);
+  --primary-hover: hsl(218, 91%, 37%);
+  --primary-light: hsl(218, 91%, 95%);
+  --gray-50: hsl(210, 40%, 98%);
+  --gray-100: hsl(210, 40%, 96%);
+  --gray-200: hsl(214, 32%, 91%);
+  --gray-300: hsl(213, 27%, 84%);
+  --gray-400: hsl(215, 20%, 65%);
+  --gray-500: hsl(215, 16%, 47%);
+  --gray-600: hsl(215, 19%, 35%);
+  --gray-700: hsl(215, 25%, 27%);
+  --gray-900: hsl(222, 84%, 5%);
+  --white: hsl(0, 0%, 100%);
+  --healthcare-600: hsl(218, 91%, 42%);
+  --healthcare-700: hsl(218, 91%, 37%);
+  --healthcare-200: hsl(218, 91%, 95%);
+  --healthcare-gradient: linear-gradient(135deg, #0836d6 0%, #0b4dd8 100%);
+  --radius: 0.75rem;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-family);
+  background: var(--healthcare-gradient);
+  min-height: 100vh;
+  color: var(--gray-900);
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: 0 25px 50px -12px rgba(8, 54, 214, 0.25);
+  padding: 2rem;
+  width: 100%;
+  max-width: 28rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.brand-header { text-align: center; margin-bottom: 2rem; }
+.brand-logo { display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem; }
+.shield-icon { height: 2rem; width: 2rem; color: var(--healthcare-600); margin-right: 0.5rem; }
+.brand-logo h1 { font-size: 1.5rem; font-weight: 700; color: var(--gray-900); }
+.brand-subtitle { color: var(--gray-600); font-size: 0.875rem; }
+
+/* Toggle buttons */
+.form-toggle {
+  display: flex;
+  background: var(--gray-100);
+  border-radius: var(--radius);
+  padding: 0.25rem;
+  margin-bottom: 1rem;
+}
+.toggle-btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  border-radius: calc(var(--radius) - 0.25rem);
+  background: transparent;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.toggle-btn:hover { color: var(--gray-700); }
+.toggle-btn.active {
+  background: var(--white);
+  color: var(--healthcare-600);
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+}
+
+/* Form Styles */
+.auth-form { animation: formSwitch 0.3s ease; }
+.field-group { margin-bottom: 1rem; transition: all 0.3s ease; }
+.field-group.hidden { display: none; }
+.field-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--gray-700); margin-bottom: 0.25rem; }
+.input-wrapper { position: relative; }
+.input-icon {
+  position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);
+  height: 1.25rem; width: 1.25rem; color: var(--gray-400);
+}
+.form-input {
+  width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid var(--gray-200); border-radius: var(--radius);
+  background: var(--gray-50); font-size: 1rem; transition: all 0.2s ease;
+}
+.form-input:focus {
+  outline: none; border-color: transparent; background: var(--white);
+  box-shadow: 0 0 0 2px var(--healthcare-600);
+}
+.password-input { padding-right: 2.5rem; }
+.password-toggle {
+  position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--gray-400);
+  cursor: pointer; transition: color 0.2s ease;
+}
+.password-toggle:hover { color: var(--gray-600); }
+.eye-icon { height: 1.25rem; width: 1.25rem; }
+
+/* Login Options */
+.login-options { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+.login-options.hidden { display: none; }
+.remember-me { display: flex; align-items: center; }
+.checkbox { height: 1rem; width: 1rem; accent-color: var(--healthcare-600); }
+.checkbox-label { margin-left: 0.5rem; font-size: 0.875rem; color: var(--gray-700); }
+.forgot-password {
+  background: none; border: none; color: var(--healthcare-600);
+  font-size: 0.875rem; cursor: pointer;
+}
+.forgot-password:hover { color: var(--healthcare-700); }
+
+/* Submit */
+.submit-btn {
+  width: 100%; background: var(--healthcare-600); color: var(--white);
+  font-weight: 500; padding: 0.75rem 1rem; border: none; border-radius: var(--radius);
+  font-size: 1rem; cursor: pointer; transition: all 0.2s ease;
+}
+.submit-btn:hover { background: var(--healthcare-700); transform: scale(1.02); }
+
+/* Footer */
+.form-footer { margin-top: 1.5rem; text-align: center; }
+.footer-text { font-size: 0.875rem; color: var(--gray-600); }
+.footer-link {
+  background: none; border: none; color: var(--healthcare-600);
+  font-weight: 500; cursor: pointer;
+}
+.footer-link:hover { color: var(--healthcare-700); }
+
+/* Animations */
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+@keyframes formSwitch { from{opacity:0.8;transform:translateY(5px);} to{opacity:1;transform:translateY(0);} }
+
+/* Responsive */
+@media (max-width:640px){
+  .card{padding:1.5rem;}
+  .brand-logo h1{font-size:1.25rem;}
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <!-- Brand -->
+      <div class="brand-header">
+        <div class="brand-logo">
+          <svg class="shield-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.5 7.5S5 18 5 13V6l7.5-3L20 6v7Z"/><path d="m9 12 2 2 4-4"/></svg>
+          <h1>Vitalcare</h1>
+        </div>
+        <p class="brand-subtitle">Digital Health Ecosystem</p>
+      </div>
+
+      <!-- Role Toggle -->
+      <div class="form-toggle">
+        <button type="button" id="patientBtn" class="toggle-btn active">Patient</button>
+        <button type="button" id="doctorBtn" class="toggle-btn">Doctor</button>
+      </div>
+
+      <!-- Login/Register Toggle -->
+      <div class="form-toggle">
+        <button type="button" id="loginBtn" class="toggle-btn active">Login</button>
+        <button type="button" id="registerBtn" class="toggle-btn">Register</button>
+      </div>
+
+      <!-- Auth Form -->
+      <form id="authForm" class="auth-form">
+        <div id="fullNameField" class="field-group hidden">
+          <label for="fullName" class="field-label">Full Name</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Enter your full name">
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="email" class="field-label">Email</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="email" id="email" name="email" class="form-input" placeholder="Enter your email" required>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="password" class="field-label">Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="m7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="password" name="password" class="form-input password-input" placeholder="Enter your password" required>
+          </div>
+        </div>
+
+        <div id="confirmPasswordField" class="field-group hidden">
+          <label for="confirmPassword" class="field-label">Confirm Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="m7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="confirmPassword" name="confirmPassword" class="form-input password-input" placeholder="Confirm your password">
+          </div>
+        </div>
+
+        <div id="loginOptions" class="login-options">
+          <div class="remember-me">
+            <input type="checkbox" id="rememberMe" name="rememberMe" class="checkbox">
+            <label for="rememberMe" class="checkbox-label">Remember me</label>
+          </div>
+          <button type="button" class="forgot-password">Forgot Password?</button>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Login</button>
+      </form>
+
+      <div class="form-footer">
+        <p class="footer-text">
+          <span id="footerText">Don't have an account? </span>
+          <button type="button" id="footerToggle" class="footer-link">Register here</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+let isLoginMode = true;
+let isPatient = true; // default role
+
+const loginBtn = document.getElementById('loginBtn');
+const registerBtn = document.getElementById('registerBtn');
+const authForm = document.getElementById('authForm');
+const submitBtn = document.getElementById('submitBtn');
+const footerText = document.getElementById('footerText');
+const footerToggle = document.getElementById('footerToggle');
+const fullNameField = document.getElementById('fullNameField');
+const confirmPasswordField = document.getElementById('confirmPasswordField');
+const loginOptions = document.getElementById('loginOptions');
+const fullNameInput = document.getElementById('fullName');
+const confirmPasswordInput = document.getElementById('confirmPassword');
+const passwordInput = document.getElementById('password');
+const patientBtn = document.getElementById('patientBtn');
+const doctorBtn = document.getElementById('doctorBtn');
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupEventListeners();
+  updateFormMode();
+  updateRoleMode();
+});
+
+function setupEventListeners() {
+  loginBtn.addEventListener('click', () => switchToLogin());
+  registerBtn.addEventListener('click', () => switchToRegister());
+  footerToggle.addEventListener('click', () => toggleFormMode());
+  authForm.addEventListener('submit', handleFormSubmit);
+
+  patientBtn.addEventListener('click', () => switchToPatient());
+  doctorBtn.addEventListener('click', () => switchToDoctor());
+}
+
+function switchToLogin(){ if(!isLoginMode){ isLoginMode=true; updateFormMode(); resetForm(); } }
+function switchToRegister(){ if(isLoginMode){ isLoginMode=false; updateFormMode(); resetForm(); } }
+function toggleFormMode(){ isLoginMode=!isLoginMode; updateFormMode(); resetForm(); }
+
+function switchToPatient(){ if(!isPatient){ isPatient=true; updateRoleMode(); } }
+function switchToDoctor(){ if(isPatient){ isPatient=false; updateRoleMode(); } }
+
+function updateRoleMode(){
+  if(isPatient){ patientBtn.classList.add('active'); doctorBtn.classList.remove('active'); }
+  else{ doctorBtn.classList.add('active'); patientBtn.classList.remove('active'); }
+}
+
+function updateFormMode(){
+  if(isLoginMode){
+    loginBtn.classList.add('active'); registerBtn.classList.remove('active');
+    submitBtn.textContent='Login';
+    footerText.textContent="Don't have an account? "; footerToggle.textContent='Register here';
+    fullNameField.classList.add('hidden'); confirmPasswordField.classList.add('hidden');
+    loginOptions.classList.remove('hidden');
+    fullNameInput.removeAttribute('required'); confirmPasswordInput.removeAttribute('required');
+  } else {
+    registerBtn.classList.add('active'); loginBtn.classList.remove('active');
+    submitBtn.textContent='Register';
+    footerText.textContent='Already have an account? '; footerToggle.textContent='Login here';
+    fullNameField.classList.remove('hidden'); confirmPasswordField.classList.remove('hidden');
+    loginOptions.classList.add('hidden');
+    fullNameInput.setAttribute('required',''); confirmPasswordInput.setAttribute('required','');
+  }
+}
+
+function resetForm(){ authForm.reset(); passwordInput.type='password'; confirmPasswordInput.type='password'; }
+
+function handleFormSubmit(e){
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(authForm).entries());
+
+  if(!isLoginMode){
+    if(data.password !== data.confirmPassword){ alert('Passwords do not match!'); return; }
+    if(data.password.length < 6){ alert('Password must be at least 6 characters!'); return; }
+  }
+
+  const emailRegex = /.+@.+/;
+if (!emailRegex.test(data.email)) {
+    alert('Enter a valid email (must contain @)');
+    return;
+}
+
+  submitBtn.textContent='Processing...'; submitBtn.disabled=true;
+
+  setTimeout(()=>{
+    alert(isPatient
+      ? (isLoginMode ? 'Patient login successful!' : 'Patient registration successful!')
+      : (isLoginMode ? 'Doctor login successful!' : 'Doctor registration successful!')
+    );
+    window.location.href = isPatient ? "patient-dashboard.html" : "doctor-dashboard.html";
+    submitBtn.textContent=isLoginMode ? 'Login':'Register'; submitBtn.disabled=false; resetForm();
+  },1500);
+}
+  </script>
+</body>
+</html>

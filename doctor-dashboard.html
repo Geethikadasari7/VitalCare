@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Doctor Dashboard</title>
+  <style>
+    :root {
+      --blue-1: #0836d6;
+      --blue-2: #1b8bff;
+      --accent: #0055ff;
+      --muted: #6b7280;
+      --card: #ffffff;
+      --glass: rgba(255, 255, 255, 0.08);
+      --radius: 14px;
+      --max-width: 1200px;
+      --soft: #eef2ff;
+      --shadow: rgba(0, 0, 0, 0.06);
+      --green: #10b981;
+      --light-gray: #f9f9f9;
+      --dark-gray: #555;
+      --danger: #ef4444;
+      --purple: #8b5cf6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    body {
+      background: var(--soft);
+      color: #1e1e2f;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .sidebar {
+      width: 240px;
+      background: var(--card);
+      padding: 2rem 1rem;
+      box-shadow: 2px 0 8px var(--shadow);
+      position: fixed;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1000;
+    }
+
+    .sidebar h2 {
+      color: var(--blue-1);
+      margin-bottom: 2rem;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.8rem;
+      user-select: none;
+    }
+
+    .nav-links { flex-grow: 1; }
+
+    .nav-link {
+      display: block;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 0.5rem;
+      transition: 0.3s;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: var(--soft);
+      color: var(--blue-1);
+      font-weight: 700;
+    }
+
+    hr { border: none; border-top: 1px solid #ddd; margin: 1rem 0; }
+
+    .main {
+      margin-left: 240px;
+      padding: 2rem;
+      flex: 1;
+      width: calc(100% - 240px);
+      overflow-y: auto;
+      max-height: 100vh;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .topbar h2 { font-weight: 700; color: var(--blue-1); }
+
+    .profile {
+      display: flex; align-items: center; gap: 0.75rem;
+      cursor: pointer; user-select: none;
+    }
+    .profile img {
+      width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
+      box-shadow: 0 0 8px var(--blue-2);
+    }
+    .profile-name { font-weight: 600; color: var(--blue-1); font-size: 1rem; }
+    .profile-sub { font-size: 0.75rem; color: var(--muted); }
+
+    /* === Overview (Dashboard) page === */
+    #overview .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    #overview .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      box-shadow: 0 6px 16px var(--shadow);
+      user-select: none;
+    }
+    #overview .card h4 { font-size: 0.95rem; color: var(--muted); margin-bottom: 0.35rem; }
+    #overview .card h2 { color: var(--blue-1); font-weight: 800; font-size: 1.6rem; }
+    #overview .subline { color: var(--muted); font-size: 0.8rem; }
+
+    /* small KPI accent bars */
+    .kpi {
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi::after {
+      content: ""; position: absolute; inset: auto 0 0 0; height: 4px;
+      background: linear-gradient(90deg, var(--blue-1), var(--blue-2));
+      border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius);
+    }
+    .kpi.success::after { background: linear-gradient(90deg, var(--green), #34d399); }
+    .kpi.warning::after { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .kpi.danger::after { background: linear-gradient(90deg, var(--danger), #f87171); }
+    .kpi.purple::after { background: linear-gradient(90deg, var(--purple), #c4b5fd); }
+
+    /* Existing CSS bar chart (keep) */
+    #overview .chart {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      box-shadow: 0 6px 16px var(--shadow);
+      margin-top: 1rem;
+      user-select: none;
+    }
+    #overview .chart h3 { margin-bottom: 0.75rem; color: var(--blue-1); }
+    #overview .bar-container {
+      display: flex; align-items: flex-end; gap: 1rem; height: 140px; padding-bottom: 0.5rem;
+    }
+    #overview .bar {
+      flex: 1; background: var(--blue-2);
+      border-radius: var(--radius); transition: background 0.3s;
+      position: relative;
+    }
+    #overview .bar:hover { background: var(--accent); }
+    #overview .bar span {
+      position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+      margin-bottom: 4px; font-size: 0.75rem; color: var(--muted); user-select: none;
+    }
+
+    /* New analytics canvases */
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .canvas-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+    .canvas-card h3 { margin-bottom: 0.75rem; color: var(--blue-1); }
+
+    /* AI Patient Chat */
+    .ai-box {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .ai-panel, .ai-side {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+    .ai-panel h3, .ai-side h4 { color: var(--blue-1); margin-bottom: 0.75rem; }
+    .ai-chat-log {
+      height: 180px; overflow-y: auto; border: 1px solid #eee; border-radius: 10px; padding: 0.75rem;
+      display: flex; flex-direction: column; gap: 0.5rem; background: #fafafa;
+    }
+    .ai-msg { font-size: 0.92rem; line-height: 1.35; }
+    .ai-msg.user { align-self: flex-end; background: var(--blue-2); color: #fff; padding: 6px 10px; border-radius: 12px 12px 2px 12px; }
+    .ai-msg.bot  { align-self: flex-start; background: #fff; color: #222; padding: 6px 10px; border-radius: 12px 12px 12px 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+    .ai-input {
+      display: flex; gap: 0.5rem; margin-top: 0.75rem;
+    }
+    .ai-input input {
+      flex: 1; padding: 0.6rem 0.85rem; border: 1px solid #ddd; border-radius: 10px; outline: none;
+    }
+    .ai-input button {
+      background: var(--accent); color: #fff; border: none; padding: 0 1rem; border-radius: 10px; font-weight: 700; cursor: pointer;
+    }
+    .ai-hint { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* === Appointments Page === */
+    #appointments { display: flex; flex-wrap: wrap; gap: 1.25rem; user-select: none; }
+    .appointment-card {
+      background: var(--card); border-radius: var(--radius); padding: 1rem 1.25rem;
+      box-shadow: 0 4px 10px var(--shadow); flex: 1 1 280px; display: flex; flex-direction: column;
+      justify-content: space-between; min-width: 280px; transition: box-shadow 0.3s;
+    }
+    .appointment-card:hover { box-shadow: 0 8px 20px rgba(8, 54, 214, 0.2); }
+    .appointment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .appointment-time { font-weight: 700; color: var(--blue-1); font-size: 1rem; }
+    .appointment-status { font-size: 0.85rem; padding: 0.15rem 0.75rem; border-radius: 20px; color: #fff; font-weight: 600; user-select: none; }
+    .status-confirmed { background-color: #10b981; }
+    .status-pending { background-color: #3b82f6; }
+    .status-cancelled { background-color: #ef4444; }
+    .appointment-body { margin-bottom: 0.75rem; }
+    .appointment-patient { font-weight: 700; color: var(--blue-1); font-size: 1.1rem; }
+    .appointment-details { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+
+    /* === Schedule Page === */
+    #schedule { user-select: none; }
+    #schedule .calendar-container {
+      background: var(--card); border-radius: var(--radius); box-shadow: 0 4px 10px var(--shadow);
+      padding: 1rem 1.5rem; max-width: 500px; margin-bottom: 2rem; user-select: none;
+    }
+    #schedule h3 { color: var(--blue-1); margin-bottom: 1rem; font-weight: 700; }
+    .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; user-select: none; }
+    .calendar .day-name, .calendar .day { text-align: center; padding: 8px 6px; font-size: 0.85rem; border-radius: 6px; }
+    .calendar .day-name { font-weight: 600; color: var(--muted); }
+    .calendar .day { cursor: pointer; transition: background-color 0.3s; }
+    .calendar .day:hover { background-color: var(--soft); }
+    .calendar .day.today { background-color: var(--blue-2); color: white; font-weight: 700; box-shadow: 0 0 6px var(--blue-2); }
+    .calendar .day.selected { background-color: var(--accent); color: white; font-weight: 700; box-shadow: 0 0 6px var(--accent); }
+
+    #schedule .schedule-list {
+      max-width: 600px; background: var(--card); border-radius: var(--radius);
+      padding: 1rem 1.5rem; box-shadow: 0 4px 10px var(--shadow); user-select: none;
+    }
+    #schedule .schedule-list h4 { margin-bottom: 1rem; color: var(--blue-1); font-weight: 700; }
+    #schedule .schedule-item { padding: 0.5rem 0; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; font-size: 0.95rem; color: var(--dark-gray); }
+    #schedule .schedule-item:last-child { border-bottom: none; }
+    #schedule .schedule-time { font-weight: 600; color: var(--blue-1); min-width: 60px; }
+
+    /* === Reports & Medications === */
+    #reports, #medications {
+      background: var(--card); border-radius: var(--radius); box-shadow: 0 4px 10px var(--shadow);
+      padding: 1rem 1.5rem; max-width: 800px; user-select: none;
+    }
+    #reports h3, #medications h3 { margin-bottom: 1rem; color: var(--blue-1); font-weight: 700; }
+    #reports .report-list, #medications .med-list { list-style: none; }
+    #reports .report-list li, #medications .med-list li { padding: 0.75rem 1rem; border-bottom: 1px solid #eee; color: var(--dark-gray); font-size: 0.95rem; }
+    #reports .report-list li:last-child, #medications .med-list li:last-child { border-bottom: none; }
+
+    /* === Messages (WhatsApp like) === */
+    #messages {
+      max-width: 800px; height: 600px; background: var(--card); border-radius: var(--radius);
+      box-shadow: 0 4px 10px var(--shadow); display: flex; flex-direction: column; user-select: none;
+    }
+    #messages-header { background: var(--blue-1); color: white; padding: 1rem 1.5rem; border-top-left-radius: var(--radius); border-top-right-radius: var(--radius); font-weight: 700; font-size: 1.25rem; }
+    #chat { flex: 1; padding: 1rem 1.5rem; overflow-y: auto; background: #e5ddd5; display: flex; flex-direction: column; gap: 0.5rem; }
+    .message {
+      max-width: 60%; padding: 0.5rem 0.75rem; border-radius: 18px; font-size: 0.95rem; line-height: 1.3; word-wrap: break-word; user-select: text;
+    }
+    .message.doctor { background: var(--blue-2); color: white; align-self: flex-end; border-bottom-right-radius: 2px; margin-left: 40%; }
+    .message.patient { background: white; color: #222; align-self: flex-start; border-bottom-left-radius: 2px; margin-right: 40%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+    #input-container { display: flex; padding: 0.75rem 1rem; border-top: 1px solid #ddd; background: var(--card); border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius); }
+    #input-message { flex: 1; padding: 0.5rem 1rem; border: 1px solid #ddd; border-radius: 30px; font-size: 1rem; outline: none; transition: border-color 0.3s; }
+    #input-message:focus { border-color: var(--blue-2); box-shadow: 0 0 8px var(--blue-2); }
+    #send-btn { background: var(--blue-2); border: none; color: white; font-weight: 700; padding: 0 1.5rem; margin-left: 0.75rem; border-radius: 30px; cursor: pointer; transition: background 0.3s; }
+    #send-btn:disabled { background: #a0c4ff; cursor: not-allowed; }
+
+    /* === Patients page === */
+    #patients .table-container { background: var(--card); border-radius: var(--radius); padding: 1rem; overflow-x: auto; }
+    #patients table { width: 100%; border-collapse: collapse; }
+    #patients thead { background: var(--soft); color: var(--muted); }
+    #patients th, #patients td { padding: 0.75rem; text-align: left; font-size: 0.95rem; }
+    #patients tbody tr:nth-child(even) { background: var(--light-gray); }
+    #patients .status { padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; color: #fff; display: inline-block; user-select: none; }
+    #patients .discharged { background: var(--green); }
+    #patients .pending { background: var(--blue-2); }
+    #patients .icu { background: #a855f7; }
+    #patients .life { background: #ef4444; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      #overview .summary { grid-template-columns: repeat(2, minmax(200px, 1fr)); }
+      .ai-box { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; width: 100%; padding: 1rem 1rem 2rem; }
+      #appointments { justify-content: center; }
+      #messages { height: 400px; }
+      .analytics-grid { grid-template-columns: 1fr; }
+    }
+
+    .red{
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>Vitalcare</h2>
+    <nav class="nav-links">
+      <a class="nav-link active" data-page="overview">Dashboard</a>
+      <a class="nav-link" data-page="appointments">Appointments</a>
+      <a class="nav-link" data-page="patients">Patients</a>
+      <a class="nav-link" data-page="schedule">Schedule</a>
+      <a class="nav-link" data-page="reports">Reports</a>
+      <a class="nav-link" data-page="messages">Messages</a>
+      <a class="nav-link" data-page="medications">Medications</a>
+      <hr>
+      <a class="nav-link red" href="login.html">Logout</a>
+      <a class="nav-link" data-page="settings">Settings</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <div class="topbar">
+      <h2 id="page-title">Doctor Dashboard</h2>
+      <div class="profile" title="Dr. Krishna Mohan, Orthopedic">
+        <img src="images/doc.jpg" alt="Doctor" onerror="this.src='https://i.pravatar.cc/40?img=12'"/>
+        <div>
+          <div class="profile-name">Dr. Krishna Mohan</div>
+          <small class="profile-sub">Orthopedic</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- === Overview Page === -->
+    <section id="overview" class="page">
+      <!-- New/Updated KPI Summary -->
+      <div class="summary">
+        <div class="card kpi" aria-live="polite">
+          <h4>Total Patients</h4>
+          <h2 id="kpi-total-patients">0</h2>
+          <div class="subline">Unique patients in system</div>
+        </div>
+        <div class="card kpi success" aria-live="polite">
+          <h4>Total Appointments</h4>
+          <h2 id="kpi-total-appointments">0</h2>
+          <div class="subline">All-time scheduled</div>
+        </div>
+        <div class="card kpi purple" aria-live="polite">
+          <h4>Total Patients & Appointments</h4>
+          <h2><span id="kpi-both-p">0</span> <span class="subline">patients</span></h2>
+          <h2 style="font-size:1.2rem;"><span id="kpi-both-a">0</span> <span class="subline">appointments</span></h2>
+        </div>
+        <!-- Keep two of your original KPIs for continuity -->
+        <div class="card kpi warning">
+          <h4>Upcoming Appointments (7d)</h4>
+          <h2 id="kpi-upcoming">0</h2>
+          <div class="subline">Next 7 days</div>
+        </div>
+      </div>
+
+      <!-- Keep your simple weekly CSS bar chart -->
+      <div class="chart">
+        <h3>Appointments This Week</h3>
+        <div class="bar-container" aria-label="Appointments per day">
+          <div class="bar" style="height: 70px;"><span>Mon</span></div>
+          <div class="bar" style="height: 120px;"><span>Tue</span></div>
+          <div class="bar" style="height: 50px;"><span>Wed</span></div>
+          <div class="bar" style="height: 140px;"><span>Thu</span></div>
+          <div class="bar" style="height: 90px;"><span>Fri</span></div>
+          <div class="bar" style="height: 40px;"><span>Sat</span></div>
+          <div class="bar" style="height: 30px;"><span>Sun</span></div>
+        </div>
+      </div>
+
+      <!-- New Statistical Analysis -->
+      <div class="analytics-grid" aria-label="Statistical Analysis">
+        <div class="canvas-card">
+          <h3>Patients by Status (Pie)</h3>
+          <canvas id="pieStatus" width="400" height="260" aria-label="Pie chart of patient status"></canvas>
+        </div>
+        <div class="canvas-card">
+          <h3>Patients by Age Group (Bar)</h3>
+          <canvas id="barAge" width="400" height="260" aria-label="Bar chart of patient age groups"></canvas>
+        </div>
+      </div>
+
+      <!-- AI Patient Chat -->
+      <div class="ai-box">
+        <div class="ai-panel">
+          <h3>AI Patient Assistant</h3>
+          <div class="ai-chat-log" id="ai-log" role="log" aria-live="polite" aria-relevant="additions">
+            <div class="ai-msg bot">Hi! Ask me about a patient. Try: “Show details for John Doe” or “What’s Jane Smith’s status?”</div>
+          </div>
+          <div class="ai-input">
+            <input id="ai-input" type="text" placeholder="Ask about a patient by name…" autocomplete="off" />
+            <button id="ai-send">Ask</button>
+          </div>
+          <div class="ai-hint">I’ll search the current patient records and summarize key info.</div>
+        </div>
+        <aside class="ai-side">
+          <h4>Quick Patient Lookup</h4>
+          <div id="quick-list"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- === Appointments Page === -->
+    <section id="appointments" class="page" style="display:none;">
+      <div class="appointment-card">
+        <div class="appointment-header">
+          <div class="appointment-time">10:00 AM</div>
+          <div class="appointment-status status-confirmed">Confirmed</div>
+        </div>
+        <div class="appointment-body">
+          <div class="appointment-patient">John Doe</div>
+          <div class="appointment-details">Knee Pain Consultation</div>
+        </div>
+        <div class="appointment-details">Room 5B</div>
+      </div>
+
+      <div class="appointment-card">
+        <div class="appointment-header">
+          <div class="appointment-time">11:30 AM</div>
+          <div class="appointment-status status-pending">Pending</div>
+        </div>
+        <div class="appointment-body">
+          <div class="appointment-patient">Jane Smith</div>
+          <div class="appointment-details">Follow-up Check</div>
+        </div>
+        <div class="appointment-details">Room 3A</div>
+      </div>
+
+      <div class="appointment-card">
+        <div class="appointment-header">
+          <div class="appointment-time">1:00 PM</div>
+          <div class="appointment-status status-cancelled">Cancelled</div>
+        </div>
+        <div class="appointment-body">
+          <div class="appointment-patient">Mark Taylor</div>
+          <div class="appointment-details">Post-surgery Review</div>
+        </div>
+        <div class="appointment-details">Room 4C</div>
+      </div>
+
+      <div class="appointment-card">
+        <div class="appointment-header">
+          <div class="appointment-time">3:30 PM</div>
+          <div class="appointment-status status-confirmed">Confirmed</div>
+        </div>
+        <div class="appointment-body">
+          <div class="appointment-patient">Emily Johnson</div>
+          <div class="appointment-details">Physical Therapy</div>
+        </div>
+        <div class="appointment-details">Room 2D</div>
+      </div>
+    </section>
+
+    <!-- === Patients Page === -->
+    <section id="patients" class="page" style="display:none;">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Age</th>
+              <th>Last Visit</th>
+              <th>Status</th>
+              <th>Room</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>John Doe</td>
+              <td>29</td>
+              <td>2024-08-12</td>
+              <td><span class="status discharged">Discharged</span></td>
+              <td>5B</td>
+            </tr>
+            <tr>
+              <td>Jane Smith</td>
+              <td>35</td>
+              <td>2024-08-20</td>
+              <td><span class="status pending">Pending</span></td>
+              <td>3A</td>
+            </tr>
+            <tr>
+              <td>Mark Taylor</td>
+              <td>40</td>
+              <td>2024-08-15</td>
+              <td><span class="status icu">ICU</span></td>
+              <td>ICU-1</td>
+            </tr>
+            <tr>
+              <td>Emily Johnson</td>
+              <td>27</td>
+              <td>2024-08-22</td>
+              <td><span class="status life">Critical</span></td>
+              <td>2D</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- === Schedule Page === -->
+    <section id="schedule" class="page" style="display:none;">
+      <div class="calendar-container">
+        <h3>Calendar</h3>
+        <div class="calendar" id="calendar">
+          <!-- Day names -->
+          <div class="day-name">Sun</div>
+          <div class="day-name">Mon</div>
+          <div class="day-name">Tue</div>
+          <div class="day-name">Wed</div>
+          <div class="day-name">Thu</div>
+          <div class="day-name">Fri</div>
+          <div class="day-name">Sat</div>
+          <!-- Days generated by JS -->
+        </div>
+      </div>
+
+      <div class="schedule-list" id="schedule-list">
+        <h4>Scheduled Appointments</h4>
+        <div class="schedule-item">
+          <div class="schedule-time">10:00 AM</div>
+          <div>Knee Pain Consultation - John Doe</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">11:30 AM</div>
+          <div>Follow-up Check - Jane Smith</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">3:30 PM</div>
+          <div>Physical Therapy - Emily Johnson</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- === Reports Page === -->
+    <section id="reports" class="page" style="display:none;">
+      <h3>Reports</h3>
+      <ul class="report-list">
+        <li>Blood Test - John Doe - 2024-08-10</li>
+        <li>X-Ray - Jane Smith - 2024-08-19</li>
+        <li>MRI Scan - Mark Taylor - 2024-08-15</li>
+        <li>Physical Therapy Report - Emily Johnson - 2024-08-22</li>
+      </ul>
+    </section>
+
+    <!-- === Messages Page === -->
+    <section id="messages" class="page" style="display:none;">
+      <div id="messages-header">Messages</div>
+      <div id="chat" role="log" aria-live="polite" aria-relevant="additions">
+        <div class="message patient" tabindex="0">Hi Doctor, I have a question about my knee.</div>
+        <div class="message doctor" tabindex="0">Hello John, sure! What seems to be the problem?</div>
+        <div class="message patient" tabindex="0">It’s been hurting after my last session.</div>
+      </div>
+      <form id="message-form" aria-label="Send message">
+        <div id="input-container">
+          <input type="text" id="input-message" autocomplete="off" placeholder="Type a message..." aria-required="true" />
+          <button type="submit" id="send-btn" disabled>Send</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- === Medications Page === -->
+    <section id="medications" class="page" style="display:none;">
+      <h3>Medications</h3>
+      <ul class="med-list">
+        <li>Paracetamol 500mg - John Doe - Twice daily</li>
+        <li>Ibuprofen 200mg - Jane Smith - After meals</li>
+        <li>Amoxicillin 250mg - Mark Taylor - Thrice daily</li>
+        <li>Vitamin D Supplement - Emily Johnson - Once daily</li>
+      </ul>
+    </section>
+
+    <!-- Help and Settings placeholders -->
+    <section id="help" class="page" style="display:none;">
+      <h3>Help</h3>
+      <p>For assistance, contact support@vitalcare.com or call +1 234 567 8900.</p>
+    </section>
+    <section id="settings" class="page" style="display:none;">
+      <h3>Settings</h3>
+      <p>Settings page coming soon...</p>
+    </section>
+
+  </main>
+
+  <script>
+    // ========= Mock Data (drives KPIs, charts, AI chat) =========
+    const patientsData = [
+      { name: 'John Doe',   age: 29, gender: 'M', lastVisit: '2024-08-12', status: 'Discharged', room: '5B',   condition: 'Knee Pain', allergies: 'None' },
+      { name: 'Jane Smith', age: 35, gender: 'F', lastVisit: '2024-08-20', status: 'Pending',    room: '3A',   condition: 'Follow-up', allergies: 'Penicillin' },
+      { name: 'Mark Taylor',age: 40, gender: 'M', lastVisit: '2024-08-15', status: 'ICU',        room: 'ICU-1',condition: 'Post-surgery', allergies: 'None' },
+      { name: 'Emily Johnson',age: 27,gender:'F', lastVisit: '2024-08-22', status: 'Critical',   room: '2D',   condition: 'Physiotherapy', allergies: 'Sulfa' },
+      // a few more for better stats
+      { name: 'Aarav Shah', age: 51, gender: 'M', lastVisit: '2024-07-11', status: 'Pending', room: '4A', condition: 'Back Pain', allergies: 'None' },
+      { name: 'Priya Nair', age: 63, gender: 'F', lastVisit: '2024-06-28', status: 'Discharged', room: '6C', condition: 'Arthritis', allergies: 'None' },
+      { name: 'Rohan Gupta', age: 18, gender: 'M', lastVisit: '2024-08-05', status: 'Discharged', room: '2A', condition: 'Sports Injury', allergies: 'None' },
+      { name: 'Sara Ahmed', age: 44, gender: 'F', lastVisit: '2024-08-01', status: 'Pending', room: '3B', condition: 'Sprain', allergies: 'Latex' },
+    ];
+
+    // Read from existing Appointments section for consistency, but also keep a data copy.
+    const appointmentsData = [
+      { time: '10:00 AM', status: 'Confirmed', patient: 'John Doe',   desc: 'Knee Pain Consultation', date: '2024-08-23' },
+      { time: '11:30 AM', status: 'Pending',   patient: 'Jane Smith', desc: 'Follow-up Check',        date: '2024-08-23' },
+      { time: '1:00 PM',  status: 'Cancelled', patient: 'Mark Taylor',desc: 'Post-surgery Review',    date: '2024-08-23' },
+      { time: '3:30 PM',  status: 'Confirmed', patient: 'Emily Johnson',desc:'Physical Therapy',      date: '2024-08-23' },
+      // extra historical appointments (for totals)
+      { time: '9:00 AM',  status: 'Confirmed', patient: 'Aarav Shah', date: '2024-07-11', desc: 'Back Pain Consult' },
+      { time: '2:00 PM',  status: 'Confirmed', patient: 'Priya Nair', date: '2024-06-28', desc: 'Arthritis Review' },
+      { time: '12:30 PM', status: 'Confirmed', patient: 'Rohan Gupta',date: '2024-08-05', desc: 'Injury Rehab' },
+      { time: '4:10 PM',  status: 'Pending',   patient: 'Sara Ahmed', date: '2024-08-01', desc: 'Sprain Check' },
+    ];
+
+    // ========= Navigation handling (unchanged) =========
+    const navLinks = document.querySelectorAll('.nav-link');
+    const pages = document.querySelectorAll('.page');
+    const pageTitle = document.getElementById('page-title');
+
+    function showPage(pageId) {
+      pages.forEach(page => { page.style.display = (page.id === pageId) ? 'block' : 'none'; });
+      navLinks.forEach(link => { link.classList.toggle('active', link.dataset.page === pageId); });
+      const titleMap = {
+        overview: 'Doctor Dashboard', appointments: 'Appointments', patients: 'Patients',
+        schedule: 'Schedule', reports: 'Reports', messages: 'Messages',
+        medications: 'Medications', help: 'Help', settings: 'Settings'
+      };
+      pageTitle.textContent = titleMap[pageId] || 'Vitalcare';
+    }
+    navLinks.forEach(link => link.addEventListener('click', () => showPage(link.dataset.page)));
+    showPage('overview');
+
+    // ========= Calendar logic (unchanged) =========
+    function generateCalendar() {
+      const calendar = document.getElementById('calendar');
+      if (!calendar) return;
+      while (calendar.children.length > 7) calendar.removeChild(calendar.lastChild);
+
+      const today = new Date(); const year = today.getFullYear(); const month = today.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const startDay = firstDay.getDay(); const totalDays = lastDay.getDate();
+
+      for (let i = 0; i < startDay; i++) {
+        const emptyCell = document.createElement('div'); emptyCell.classList.add('day'); emptyCell.style.visibility = 'hidden'; calendar.appendChild(emptyCell);
+      }
+      for (let d = 1; d <= totalDays; d++) {
+        const dayCell = document.createElement('div'); dayCell.classList.add('day'); dayCell.textContent = d;
+        if (d === today.getDate()) dayCell.classList.add('today', 'selected');
+        dayCell.tabIndex = 0;
+        dayCell.addEventListener('click', () => {
+          calendar.querySelectorAll('.day.selected').forEach(el => el.classList.remove('selected'));
+          dayCell.classList.add('selected'); updateScheduleList(d);
+        });
+        calendar.appendChild(dayCell);
+      }
+    }
+    function updateScheduleList(day) {
+      const scheduleList = document.getElementById('schedule-list');
+      if (!scheduleList) return;
+      [...scheduleList.querySelectorAll('.schedule-item')].forEach(item => item.remove());
+      const scheduleData = {
+        10: [ { time: '10:00 AM', desc: 'Knee Pain Consultation - John Doe' }, { time: '11:30 AM', desc: 'Follow-up Check - Jane Smith' }, ],
+        15: [ { time: '12:00 PM', desc: 'MRI Scan Review - Mark Taylor' }, ],
+        22: [ { time: '9:00 AM', desc: 'Physical Therapy - Emily Johnson' }, { time: '2:30 PM', desc: 'New Patient Consultation' }, ],
+      };
+      const daySchedule = scheduleData[day] || [ { time: 'No appointments', desc: '' } ];
+      daySchedule.forEach(({ time, desc }) => {
+        const item = document.createElement('div'); item.classList.add('schedule-item');
+        if (time === 'No appointments') { item.textContent = 'No appointments'; }
+        else {
+          const timeDiv = document.createElement('div'); timeDiv.classList.add('schedule-time'); timeDiv.textContent = time;
+          const descDiv = document.createElement('div'); descDiv.textContent = desc;
+          item.appendChild(timeDiv); item.appendChild(descDiv);
+        }
+        scheduleList.appendChild(item);
+      });
+    }
+    generateCalendar();
+
+    // ========= Messages send logic (unchanged) =========
+    const chat = document.getElementById('chat');
+    const inputMessage = document.getElementById('input-message');
+    const sendBtn = document.getElementById('send-btn');
+    const messageForm = document.getElementById('message-form');
+
+    if (inputMessage && messageForm) {
+      inputMessage.addEventListener('input', () => { sendBtn.disabled = inputMessage.value.trim() === ''; });
+      messageForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const text = inputMessage.value.trim();
+        if (!text) return;
+        const msgDiv = document.createElement('div'); msgDiv.classList.add('message', 'doctor'); msgDiv.textContent = text; msgDiv.tabIndex = 0;
+        chat.appendChild(msgDiv); chat.scrollTop = chat.scrollHeight;
+        inputMessage.value = ''; sendBtn.disabled = true;
+        setTimeout(() => {
+          const replyDiv = document.createElement('div'); replyDiv.classList.add('message', 'patient');
+          replyDiv.textContent = "Thanks for the update, I'll review and get back to you."; replyDiv.tabIndex = 0;
+          chat.appendChild(replyDiv); chat.scrollTop = chat.scrollHeight;
+        }, 2000);
+      });
+    }
+
+    // ========= Dashboard KPIs =========
+    const kpiTotalPatientsEl = document.getElementById('kpi-total-patients');
+    const kpiTotalAppointmentsEl = document.getElementById('kpi-total-appointments');
+    const kpiBothP = document.getElementById('kpi-both-p');
+    const kpiBothA = document.getElementById('kpi-both-a');
+    const kpiUpcoming = document.getElementById('kpi-upcoming');
+
+    function computeKPIs() {
+      const uniquePatients = new Set(patientsData.map(p => p.name)).size;
+      const totalAppointments = appointmentsData.length;
+
+      // Upcoming in next 7 days (demo uses static dates; treat all "Confirmed/Pending" as upcoming sample)
+      const upcomingCount = appointmentsData.filter(a => a.status !== 'Cancelled').length;
+
+      if (kpiTotalPatientsEl) kpiTotalPatientsEl.textContent = uniquePatients;
+      if (kpiTotalAppointmentsEl) kpiTotalAppointmentsEl.textContent = totalAppointments;
+      if (kpiBothP) kpiBothP.textContent = uniquePatients;
+      if (kpiBothA) kpiBothA.textContent = totalAppointments;
+      if (kpiUpcoming) kpiUpcoming.textContent = upcomingCount;
+    }
+    computeKPIs();
+
+    // ========= Statistical Analysis Charts (vanilla Canvas) =========
+    // Helpers
+    function drawPieChart(canvas, dataPairs) {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height; const cx = w/2, cy = h/2, r = Math.min(w,h)*0.36;
+      ctx.clearRect(0,0,w,h);
+      const total = dataPairs.reduce((s, [,v]) => s+v, 0) || 1;
+      let start = -Math.PI/2;
+      const colors = [
+        '#1b8bff', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#0ea5e9', '#22c55e'
+      ];
+      dataPairs.forEach(([label, value], i) => {
+        const angle = (value/total)*Math.PI*2;
+        ctx.beginPath(); ctx.moveTo(cx,cy);
+        ctx.arc(cx,cy,r,start,start+angle); ctx.closePath();
+        ctx.fillStyle = colors[i % colors.length]; ctx.fill();
+        // label
+        const mid = start + angle/2;
+        const lx = cx + Math.cos(mid)*(r+18);
+        const ly = cy + Math.sin(mid)*(r+18);
+        ctx.fillStyle = '#374151'; ctx.font = '12px Segoe UI';
+        const pct = Math.round((value/total)*100);
+        ctx.fillText(`${label} (${pct}%)`, lx-28, ly);
+        start += angle;
+      });
+      // legend
+      ctx.font = '12px Segoe UI'; ctx.fillStyle = '#6b7280';
+      let legendX = 10, legendY = h - 14;
+      dataPairs.forEach(([label,], i) => {
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fillRect(legendX, legendY-10, 10, 10);
+        ctx.fillStyle = '#6b7280';
+        ctx.fillText(label, legendX + 14, legendY);
+        legendX += ctx.measureText(label).width + 50;
+      });
+    }
+
+    function drawBarChart(canvas, labels, values) {
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0,0,w,h);
+      const padding = 36; const axisY = h - padding; const axisX = padding;
+      const maxVal = Math.max(...values, 1);
+      const barWidth = (w - padding*2) / (values.length * 1.6);
+      // axes
+      ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(axisX, padding); ctx.lineTo(axisX, axisY); ctx.lineTo(w - padding/2, axisY); ctx.stroke();
+      // bars
+      values.forEach((v, i) => {
+        const x = axisX + (i * barWidth * 1.6) + 8;
+        const barH = (v / maxVal) * (axisY - padding);
+        ctx.fillStyle = '#1b8bff';
+        ctx.fillRect(x, axisY - barH, barWidth, barH);
+        // label
+        ctx.fillStyle = '#6b7280'; ctx.font = '12px Segoe UI';
+        const lbl = labels[i];
+        const textW = ctx.measureText(lbl).width;
+        ctx.fillText(lbl, x + (barWidth/2 - textW/2), h - 8);
+        // value
+        ctx.fillStyle = '#374151'; ctx.font = '12px Segoe UI';
+        const valStr = String(v);
+        ctx.fillText(valStr, x + (barWidth/2 - ctx.measureText(valStr).width/2), axisY - barH - 6);
+      });
+    }
+
+    // Build datasets from patientsData
+    function buildStatusCounts() {
+      const map = new Map();
+      patientsData.forEach(p => {
+        const s = p.status || 'Unknown';
+        map.set(s, (map.get(s) || 0) + 1);
+      });
+      return Array.from(map.entries()); // [ [status, count], ... ]
+    }
+    function buildAgeGroups() {
+      const groups = {
+        '0-17': 0, '18-30': 0, '31-45': 0, '46-60': 0, '61+': 0
+      };
+      patientsData.forEach(p => {
+        const a = p.age;
+        if (a <= 17) groups['0-17']++;
+        else if (a <= 30) groups['18-30']++;
+        else if (a <= 45) groups['31-45']++;
+        else if (a <= 60) groups['46-60']++;
+        else groups['61+']++;
+      });
+      return { labels: Object.keys(groups), values: Object.values(groups) };
+    }
+
+    function renderAnalytics() {
+      const pie = document.getElementById('pieStatus');
+      const bar = document.getElementById('barAge');
+      drawPieChart(pie, buildStatusCounts());
+      const age = buildAgeGroups();
+      drawBarChart(bar, age.labels, age.values);
+    }
+    renderAnalytics();
+
+    // ========= AI Patient Chat (local retrieval over patientsData) =========
+    const aiLog = document.getElementById('ai-log');
+    const aiInput = document.getElementById('ai-input');
+    const aiSend = document.getElementById('ai-send');
+    const quickList = document.getElementById('quick-list');
+
+    function appendAIMessage(text, who = 'bot') {
+      const div = document.createElement('div');
+      div.className = `ai-msg ${who}`;
+      div.textContent = text;
+      aiLog.appendChild(div);
+      aiLog.scrollTop = aiLog.scrollHeight;
+    }
+
+    function patientLookupFromText(q) {
+      // Extract the longest matching patient name substring (case-insensitive)
+      const norm = q.toLowerCase();
+      let match = null;
+      patientsData.forEach(p => {
+        const n = p.name.toLowerCase();
+        if (norm.includes(n)) match = p;
+      });
+      // Fallback: try token-based startsWith
+      if (!match) {
+        const tokens = norm.split(/\s+/).filter(Boolean);
+        match = patientsData.find(p => tokens.some(t => p.name.toLowerCase().startsWith(t)));
+      }
+      return match || null;
+    }
+
+    function summarizePatient(p) {
+      return [
+        `Name: ${p.name}`,
+        `Age/Gender: ${p.age}/${p.gender}`,
+        `Status: ${p.status}`,
+        `Room: ${p.room}`,
+        `Condition: ${p.condition}`,
+        `Allergies: ${p.allergies}`,
+        `Last Visit: ${p.lastVisit}`
+      ].join(' • ');
+    }
+
+    function handleAIQuery() {
+      const q = aiInput.value.trim();
+      if (!q) return;
+      appendAIMessage(q, 'user');
+
+      const found = patientLookupFromText(q);
+      if (found) {
+        const details = summarizePatient(found);
+        appendAIMessage(details, 'bot');
+      } else {
+        const names = patientsData.map(p => p.name).join(', ');
+        appendAIMessage(`I couldn't find that patient. Try: ${names}.`, 'bot');
+      }
+      aiInput.value = '';
+      aiInput.focus();
+    }
+
+    if (aiSend && aiInput) {
+      aiSend.addEventListener('click', handleAIQuery);
+      aiInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); handleAIQuery(); } });
+    }
+
+    // Quick patient buttons
+    if (quickList) {
+      patientsData.forEach(p => {
+        const btn = document.createElement('button');
+        btn.textContent = p.name;
+        btn.style.cssText = 'display:block;width:100%;text-align:left;margin:6px 0;padding:8px 10px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;cursor:pointer;';
+        btn.addEventListener('click', () => {
+          aiInput.value = `Show details for ${p.name}`;
+          handleAIQuery();
+        });
+        quickList.appendChild(btn);
+      });
+    }
+  </script>
+</body>
+</html>
